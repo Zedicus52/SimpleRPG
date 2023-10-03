@@ -1,11 +1,12 @@
 using System;
+using SimpleRPG.Abstraction;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
 namespace SimpleRPG.Player
 {
-    public class Mover
+    public class Mover : IAction
     {
         public Vector3 Velocity => _navMeshAgent.velocity;
         
@@ -14,8 +15,17 @@ namespace SimpleRPG.Player
         {
             _navMeshAgent = agent;
         }
-        
-        public void SetDestinationPoint(Vector3 destinationPoint) => 
+
+        public void StartAction(Vector3 destinationPoint)
+        {
+            _navMeshAgent.isStopped = false;
             _navMeshAgent.SetDestination(destinationPoint);
+
+        }
+
+        public void Cancel()
+        {
+            _navMeshAgent.isStopped = true;
+        }
     }
 }

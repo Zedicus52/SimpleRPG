@@ -1,14 +1,18 @@
 using System;
+using SimpleRPG.Combat;
+using SimpleRPG.Core;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
 namespace SimpleRPG.Player
 {
-    [RequireComponent(typeof(UnityEngine.AI.NavMeshAgent), typeof(Animator))]
+    [RequireComponent(typeof(NavMeshAgent), typeof(Animator))]
     public class PlayerController : MonoBehaviour
     {
-
+        [Header("Fighter Settings")]
+        [SerializeField] private float _attackRange;
+        
         private Camera _mainCamera;
         private Animator _animator;
         private Transform _transform;
@@ -18,12 +22,16 @@ namespace SimpleRPG.Player
         private InputAction _mousePositionAction;
 
         private Mover _mover;
+        private Fighter _fighter;
+        private ActionScheduler _actionScheduler;
         
         private readonly int _playerSpeed = Animator.StringToHash("PlayerSpeed");
 
         private void Awake()
         {
             _mover = new Mover(GetComponent<NavMeshAgent>());
+            _fighter = new Fighter(GetComponent<NavMeshAgent>(), _attackRange);
+            _actionScheduler = new ActionScheduler();
             _playerInputActions = new Player_IA();
             
             _animator = GetComponent<Animator>();
@@ -44,11 +52,12 @@ namespace SimpleRPG.Player
 
         private void Update()
         {
-            if(_mouseClickAction.IsPressed())
-                OnMouseClick();
-            
             UpdateAnimator();
+            _fighter.Update();
+
         }
+
+       
 
         private void OnDisable()
         {
@@ -63,9 +72,22 @@ namespace SimpleRPG.Player
             Vector2 mousePos = _mousePositionAction.ReadValue<Vector2>();
             Ray ray = _mainCamera.ScreenPointToRay(mousePos);
 
+            RaycastHit[] results = Physics.RaycastAll(ray);
+            
+            foreach (RaycastHit result in results)
+            {
+                if (result.transform.TryGetComponent(out CombatTarget target))
+                {
+                    _actionScheduler.StartNewAction(_fighter);
+                    _fighter.Attack(target);
+                    return;
+                }
+            }
+            
             if (Physics.Raycast(ray, out RaycastHit hitInfo))
             {
-                _mover.SetDestinationPoint(hitInfo.point);
+                _actionScheduler.StartNewAction(_mover);
+                _mover.StartAction(hitInfo.point);
             }
         }
         private void UpdateAnimator()
