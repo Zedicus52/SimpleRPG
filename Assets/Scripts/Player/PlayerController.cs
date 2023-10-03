@@ -1,14 +1,36 @@
+using System;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
 namespace SimpleRPG.Player
 {
+    [RequireComponent(typeof(UnityEngine.AI.NavMeshAgent), typeof(Animator))]
     public class PlayerController : MonoBehaviour
     {
+
+        private Camera _mainCamera;
+        private Animator _animator;
+        private Transform _transform;
+        
         private Player_IA _playerInputActions;
         private InputAction _mouseClickAction;
         private InputAction _mousePositionAction;
+
+        private Mover _mover;
         
+        private readonly int _playerSpeed = Animator.StringToHash("PlayerSpeed");
+
+        private void Awake()
+        {
+            _mover = new Mover(GetComponent<NavMeshAgent>());
+            _playerInputActions = new Player_IA();
+            
+            _animator = GetComponent<Animator>();
+            _transform = GetComponent<Transform>();
+            _mainCamera = Camera.main;
+        }
+
         private void OnEnable()
         {
             _mouseClickAction = _playerInputActions.Player.MouseClick;
@@ -17,13 +39,39 @@ namespace SimpleRPG.Player
             _mousePositionAction.Enable();
             _mouseClickAction.Enable();
 
-            //_mouseClickAction.performed += OnMouseClick;
+            _mouseClickAction.performed += OnMouseClick;
+        }
+
+        private void Update()
+        {
+            if(_mouseClickAction.IsPressed())
+                OnMouseClick();
+            
+            UpdateAnimator();
         }
 
         private void OnDisable()
         {
             _mouseClickAction.Disable();
             _mousePositionAction.Disable();
+        }
+        
+        private void OnMouseClick(InputAction.CallbackContext context) => OnMouseClick();
+        
+        private void OnMouseClick()
+        {
+            Vector2 mousePos = _mousePositionAction.ReadValue<Vector2>();
+            Ray ray = _mainCamera.ScreenPointToRay(mousePos);
+
+            if (Physics.Raycast(ray, out RaycastHit hitInfo))
+            {
+                _mover.SetDestinationPoint(hitInfo.point);
+            }
+        }
+        private void UpdateAnimator()
+        {
+            Vector3 localVelocity = _transform.InverseTransformDirection(_mover.Velocity);
+            _animator.SetFloat(_playerSpeed, localVelocity.z);
         }
     }
 }
