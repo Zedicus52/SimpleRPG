@@ -12,6 +12,7 @@ namespace SimpleRPG.Player
     {
         [Header("Fighter Settings")]
         [SerializeField] private float _attackRange;
+        [SerializeField] private float _attackFrequency;
         
         private Camera _mainCamera;
         private Animator _animator;
@@ -29,14 +30,14 @@ namespace SimpleRPG.Player
 
         private void Awake()
         {
-            _mover = new Mover(GetComponent<NavMeshAgent>());
-            _fighter = new Fighter(GetComponent<NavMeshAgent>(), _attackRange);
-            _actionScheduler = new ActionScheduler();
-            _playerInputActions = new Player_IA();
-            
             _animator = GetComponent<Animator>();
             _transform = GetComponent<Transform>();
             _mainCamera = Camera.main;
+            
+            _mover = new Mover(GetComponent<NavMeshAgent>());
+            _fighter = new Fighter(GetComponent<NavMeshAgent>(), _attackRange, _animator, _attackFrequency);
+            _actionScheduler = new ActionScheduler();
+            _playerInputActions = new Player_IA();
         }
 
         private void OnEnable()
@@ -57,7 +58,11 @@ namespace SimpleRPG.Player
 
         }
 
-       
+        //Animation event
+        public void Hit()
+        {
+            _fighter.Attack();
+        }
 
         private void OnDisable()
         {
@@ -79,7 +84,8 @@ namespace SimpleRPG.Player
                 if (result.transform.TryGetComponent(out CombatTarget target))
                 {
                     _actionScheduler.StartNewAction(_fighter);
-                    _fighter.Attack(target);
+                    //_animator.SetTrigger(_attack);
+                    _fighter.SetTarget(target);
                     return;
                 }
             }
