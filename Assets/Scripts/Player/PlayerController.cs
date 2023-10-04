@@ -1,42 +1,26 @@
-using System;
 using SimpleRPG.Combat;
-using SimpleRPG.Core;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using CharacterController = SimpleRPG.Core.CharacterController;
 
 namespace SimpleRPG.Player
 {
     [RequireComponent(typeof(NavMeshAgent), typeof(Animator))]
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : CharacterController
     {
-        [Header("Fighter Settings")]
-        [SerializeField] private float _attackRange;
-        [SerializeField] private float _attackFrequency;
-        
         private Camera _mainCamera;
-        private Animator _animator;
-        private Transform _transform;
-        
+
         private Player_IA _playerInputActions;
         private InputAction _mouseClickAction;
         private InputAction _mousePositionAction;
-
-        private Mover _mover;
-        private Fighter _fighter;
-        private ActionScheduler _actionScheduler;
         
         private readonly int _playerSpeed = Animator.StringToHash("PlayerSpeed");
 
-        private void Awake()
+        protected override void Awake()
         {
-            _animator = GetComponent<Animator>();
-            _transform = GetComponent<Transform>();
+            base.Awake();
             _mainCamera = Camera.main;
-            
-            _mover = new Mover(GetComponent<NavMeshAgent>());
-            _fighter = new Fighter(GetComponent<NavMeshAgent>(), _attackRange, _animator, _attackFrequency);
-            _actionScheduler = new ActionScheduler();
             _playerInputActions = new Player_IA();
         }
 
@@ -50,20 +34,7 @@ namespace SimpleRPG.Player
 
             _mouseClickAction.performed += OnMouseClick;
         }
-
-        private void Update()
-        {
-            UpdateAnimator();
-            _fighter.Update();
-
-        }
-
-        //Animation event
-        public void Hit()
-        {
-            _fighter.Attack();
-        }
-
+        
         private void OnDisable()
         {
             _mouseClickAction.Disable();
@@ -83,8 +54,9 @@ namespace SimpleRPG.Player
             {
                 if (result.transform.TryGetComponent(out CombatTarget target))
                 {
+                    if(target.IsDead)
+                        continue;
                     _actionScheduler.StartNewAction(_fighter);
-                    //_animator.SetTrigger(_attack);
                     _fighter.SetTarget(target);
                     return;
                 }
@@ -96,7 +68,8 @@ namespace SimpleRPG.Player
                 _mover.StartAction(hitInfo.point);
             }
         }
-        private void UpdateAnimator()
+        
+        protected override void UpdateAnimator()
         {
             Vector3 localVelocity = _transform.InverseTransformDirection(_mover.Velocity);
             _animator.SetFloat(_playerSpeed, localVelocity.z);
