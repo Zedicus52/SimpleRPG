@@ -2519,6 +2519,7 @@ MonoBehaviour:
   _attackRange: 3
   _damage: 5
   _attackFrequency: 2
+  _chaseDistance: 5
 --- !u!114 &6889061227500249828
 MonoBehaviour:
   m_ObjectHideFlags: 0

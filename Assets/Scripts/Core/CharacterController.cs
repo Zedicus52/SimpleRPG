@@ -16,12 +16,15 @@ namespace SimpleRPG.Core
         [SerializeField] private float _damage;
         [SerializeField] private float _attackFrequency;
         
-        protected Animator _animator;
+        private Animator _animator;
         protected Transform _transform;
         
         protected Mover _mover;
         protected Fighter _fighter;
         protected ActionScheduler _actionScheduler;
+        
+        private readonly int _characterSpeed = Animator.StringToHash("CharacterSpeed");
+
         
         protected virtual void Awake()
         {
@@ -43,6 +46,22 @@ namespace SimpleRPG.Core
         
         public void Hit() => _fighter.Attack();
 
-        protected abstract void UpdateAnimator();
+        private void UpdateAnimator()
+        {
+            Vector3 localVelocity = _transform.InverseTransformDirection(_mover.Velocity);
+            _animator.SetFloat(_characterSpeed, localVelocity.z);
+        }
+
+        protected void StartMoveAction(Vector3 destinationPoint)
+        {
+            _actionScheduler.StartNewAction(_mover);
+            _mover.StartAction(destinationPoint);
+        }
+
+        protected void StartFightAction(CombatTarget target)
+        {
+            _actionScheduler.StartNewAction(_fighter);
+            _fighter.SetTarget(target);
+        }
     }
 }
