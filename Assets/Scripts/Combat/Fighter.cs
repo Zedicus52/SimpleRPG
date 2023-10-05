@@ -11,6 +11,7 @@ namespace SimpleRPG.Combat
         private readonly float _damage;
         private readonly float _attackFrequency;
         private readonly Animator _animator;
+        private readonly CombatTarget _target;
         
         private readonly int _attack = Animator.StringToHash("Attack");
         private readonly int _cancelAttack = Animator.StringToHash("CancelAttack");
@@ -19,12 +20,13 @@ namespace SimpleRPG.Combat
         private float _lastAttackTime;
         
         public Fighter(NavMeshAgent agent, float attackDistance, 
-            Animator animator, float attackFrequency, float damage)
+            Animator animator, float attackFrequency, float damage, CombatTarget target)
         {
             _navMeshAgent = agent;
             _attackDistance = attackDistance;
             _attackFrequency = attackFrequency;
             _damage = damage;
+            _target = target;
             _animator = animator;
         }
         public void Attack()
@@ -44,12 +46,12 @@ namespace SimpleRPG.Combat
 
         public void SetTarget(CombatTarget target)
         {
-            if (target != null)
-            {
-                _currentTarget = target;
-                _lastAttackTime = 0;
-                MoveToTarget();
-            }
+            if (!target || _target.IsDead) 
+                return;
+            
+            _currentTarget = target;
+            _lastAttackTime = 0;
+            MoveToTarget();
         }
 
         public void Cancel()
@@ -62,6 +64,9 @@ namespace SimpleRPG.Combat
 
         public void Update()
         {
+            if(_target.IsDead)
+                return;
+            
             _lastAttackTime += Time.deltaTime; 
             
             if (!_currentTarget)

@@ -12,12 +12,14 @@ namespace SimpleRPG.Core
     public abstract class CharacterController : MonoBehaviour
     {
         [Header("Fighter Settings")]
-        [SerializeField] private float _attackRange;
+        [SerializeField] protected float _attackRange;
         [SerializeField] private float _damage;
         [SerializeField] private float _attackFrequency;
         
         private Animator _animator;
         protected Transform _transform;
+        protected CombatTarget _combatTarget;
+
 
         private Mover _mover;
         private Fighter _fighter;
@@ -30,15 +32,20 @@ namespace SimpleRPG.Core
         {
             _animator = GetComponent<Animator>();
             _transform = GetComponent<Transform>();
+            _combatTarget = GetComponent<CombatTarget>();
+
             
             _mover = new Mover(GetComponent<NavMeshAgent>(), GetComponent<CombatTarget>().CharacterHealth);
             _fighter = new Fighter(GetComponent<NavMeshAgent>(), 
-                _attackRange, _animator, _attackFrequency, _damage);
+                _attackRange, _animator, _attackFrequency, _damage, _combatTarget);
             _actionScheduler = new ActionScheduler();
         }
         
         protected virtual void Update()
         {
+            if(_combatTarget.IsDead)
+                return;
+            
             UpdateAnimator();
             _fighter.Update();
         }

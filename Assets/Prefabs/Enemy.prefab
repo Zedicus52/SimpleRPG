@@ -2520,7 +2520,10 @@ MonoBehaviour:
   _damage: 5
   _attackFrequency: 2
   _chaseDistance: 5
-  _returnToStartPosition: 0
+  _returnToStartPosition: 1
+  _patrolTime: 5
+  _patrolPointTolerance: 0.3
+  _patrolPath: {fileID: 0}
 --- !u!114 &6889061227500249828
 MonoBehaviour:
   m_ObjectHideFlags: 0

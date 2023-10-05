@@ -4,6 +4,8 @@ namespace SimpleRPG.Enemy
 {
     public class PatrolPath : MonoBehaviour
     {
+        public int PatrolPointCount => _patrolPoints.Length;
+        
         [SerializeField] private PatrolPoint[] _patrolPoints;
 
         private void OnDrawGizmos()
@@ -14,12 +16,17 @@ namespace SimpleRPG.Enemy
             }
         }
 
-        private PatrolPoint GetNextPatrolPoint(int currentIndex)
+        public PatrolPoint GetNextPatrolPoint(int currentIndex)
         {
             if (currentIndex+1 >= _patrolPoints.Length)
                 return _patrolPoints[0];
 
             return _patrolPoints[currentIndex + 1];
+        }
+
+        public PatrolPoint GetFirstPatrolPoint()
+        {
+            return _patrolPoints[0];
         }
     }
 }

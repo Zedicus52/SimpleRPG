@@ -3406,20 +3406,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 89724399100380612, guid: 186aea492f5131f48b9bbabfe6c1ebe4, type: 3}
-      propertyPath: _patrolTime
-      value: 5
-      objectReference: {fileID: 0}
+      propertyPath: _patrolPath
+      value: 
+      objectReference: {fileID: 7349229508714476455}
     - target: {fileID: 89724399100380612, guid: 186aea492f5131f48b9bbabfe6c1ebe4, type: 3}
       propertyPath: _chaseRadius
       value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 89724399100380612, guid: 186aea492f5131f48b9bbabfe6c1ebe4, type: 3}
-      propertyPath: _chaseDistance
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 89724399100380612, guid: 186aea492f5131f48b9bbabfe6c1ebe4, type: 3}
-      propertyPath: _returnToStartPosition
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2561739481014283082, guid: 186aea492f5131f48b9bbabfe6c1ebe4, type: 3}
       propertyPath: m_Name
@@ -4593,7 +4585,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1421480984013519847}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -1.4, y: 0, z: 12.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
