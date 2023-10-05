@@ -3362,6 +3362,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 89724399100380612, guid: 186aea492f5131f48b9bbabfe6c1ebe4, type: 3}
+      propertyPath: _patrolTime
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 89724399100380612, guid: 186aea492f5131f48b9bbabfe6c1ebe4, type: 3}
       propertyPath: _chaseRadius
       value: 5
       objectReference: {fileID: 0}

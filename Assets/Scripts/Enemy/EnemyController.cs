@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using SimpleRPG.Combat;
 using SimpleRPG.Player;
 using UnityEngine;
@@ -11,11 +12,13 @@ namespace SimpleRPG.Enemy
         [Header("Enemy chase settings")]
         [SerializeField] private float _chaseDistance;
         [SerializeField] private bool _returnToStartPosition;
+        [SerializeField] private float _patrolTime;
 
         private Transform _playerTransform;
         private CombatTarget _playerCombatTarget;
 
         private Vector3 _startPosition;
+        private float _patrolTimer;
         
     
 
@@ -35,12 +38,17 @@ namespace SimpleRPG.Enemy
             if (distanceToPlayer < _chaseDistance)
             {
                 StartFightAction(_playerCombatTarget);
+                _patrolTimer = 0;
             }
-            else if (distanceToPlayer > _chaseDistance && _returnToStartPosition)
+            else if (distanceToPlayer > _chaseDistance 
+                     && _returnToStartPosition && _patrolTimer >= _patrolTime)
             {
                 StartMoveAction(_startPosition);
+                _patrolTimer = 0;
             }
-            
+
+            _patrolTimer += Time.deltaTime;
+
         }
 
         private float GetDistanceToPlayer()
@@ -54,5 +62,7 @@ namespace SimpleRPG.Enemy
             Gizmos.DrawWireSphere(transform.position, _chaseDistance);
             Gizmos.color = Color.white;
         }
+
+        
     }
 }

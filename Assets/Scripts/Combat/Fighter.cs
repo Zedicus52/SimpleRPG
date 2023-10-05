@@ -44,7 +44,7 @@ namespace SimpleRPG.Combat
 
         public void SetTarget(CombatTarget target)
         {
-            if (target != null && _currentTarget != target)
+            if (target != null)
             {
                 _currentTarget = target;
                 _lastAttackTime = 0;
