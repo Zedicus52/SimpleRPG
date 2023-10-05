@@ -7,6 +7,7 @@ namespace SimpleRPG.Combat
     public class CombatTarget : MonoBehaviour
     {
         public bool IsDead => _health.IsDead;
+        public Health CharacterHealth => _health;
         
         [Header("Health Settings")] 
         [SerializeField] private float _maxHealth;

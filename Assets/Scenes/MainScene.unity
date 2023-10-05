@@ -3365,6 +3365,14 @@ PrefabInstance:
       propertyPath: _chaseRadius
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 89724399100380612, guid: 186aea492f5131f48b9bbabfe6c1ebe4, type: 3}
+      propertyPath: _chaseDistance
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 89724399100380612, guid: 186aea492f5131f48b9bbabfe6c1ebe4, type: 3}
+      propertyPath: _returnToStartPosition
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2561739481014283082, guid: 186aea492f5131f48b9bbabfe6c1ebe4, type: 3}
       propertyPath: m_Name
       value: Enemy

@@ -18,10 +18,10 @@ namespace SimpleRPG.Core
         
         private Animator _animator;
         protected Transform _transform;
-        
-        protected Mover _mover;
-        protected Fighter _fighter;
-        protected ActionScheduler _actionScheduler;
+
+        private Mover _mover;
+        private Fighter _fighter;
+        private ActionScheduler _actionScheduler;
         
         private readonly int _characterSpeed = Animator.StringToHash("CharacterSpeed");
 
@@ -31,7 +31,7 @@ namespace SimpleRPG.Core
             _animator = GetComponent<Animator>();
             _transform = GetComponent<Transform>();
             
-            _mover = new Mover(GetComponent<NavMeshAgent>());
+            _mover = new Mover(GetComponent<NavMeshAgent>(), GetComponent<CombatTarget>().CharacterHealth);
             _fighter = new Fighter(GetComponent<NavMeshAgent>(), 
                 _attackRange, _animator, _attackFrequency, _damage);
             _actionScheduler = new ActionScheduler();
