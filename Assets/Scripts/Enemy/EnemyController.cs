@@ -41,8 +41,9 @@ namespace SimpleRPG.Enemy
             _isAttack = false;
         }
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
             if (!_patrolPath) 
                 return;
             

@@ -35,6 +35,11 @@ namespace SimpleRPG.Core
             _combatTarget = GetComponent<CombatTarget>();
 
             
+            
+        }
+
+        protected virtual void Start()
+        {
             _mover = new Mover(GetComponent<NavMeshAgent>(), GetComponent<CombatTarget>().CharacterHealth);
             _fighter = new Fighter(GetComponent<NavMeshAgent>(), 
                 _attackRange, _animator, _attackFrequency, _damage, _combatTarget);
