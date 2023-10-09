@@ -1,4 +1,8 @@
+using System;
 using SimpleRPG.Combat;
+using SimpleRPG.Core;
+using SimpleRPG.DataPersistence;
+using SimpleRPG.DataPersistence.Data;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
@@ -7,7 +11,7 @@ using CharacterController = SimpleRPG.Core.CharacterController;
 namespace SimpleRPG.Player
 {
     [RequireComponent(typeof(NavMeshAgent), typeof(Animator))]
-    public sealed class PlayerController : CharacterController
+    public sealed class PlayerController : CharacterController, IDataPersistence
     {
         private Camera _mainCamera;
 
@@ -19,6 +23,7 @@ namespace SimpleRPG.Player
         protected override void Awake()
         {
             base.Awake();
+            GameContext.Instance.Saver.RegisterObject(this);
             _mainCamera = Camera.main;
             _playerInputActions = new Player_IA();
         }
@@ -32,6 +37,7 @@ namespace SimpleRPG.Player
 
             _mousePositionAction.Enable();
             _mouseClickAction.Enable();
+            
 
             _mouseClickAction.performed += OnMouseClick;
         }
@@ -43,7 +49,12 @@ namespace SimpleRPG.Player
             _mouseClickAction.Disable();
             _mousePositionAction.Disable();
         }
-        
+
+        private void OnDestroy()
+        {
+            GameContext.Instance.Saver.UnRegisterObject(this);
+        }
+
         private void OnMouseClick(InputAction.CallbackContext context) => OnMouseClick();
         
         private void OnMouseClick()
@@ -67,6 +78,17 @@ namespace SimpleRPG.Player
             if (Physics.Raycast(ray, out RaycastHit hitInfo))
                 StartMoveAction(hitInfo.point);
         }
-        
+
+        public void LoadData(GameData gameData)
+        {
+            _transform.position = new Vector3(gameData.PlayerPosition.X, gameData.PlayerPosition.Y,
+                gameData.PlayerPosition.Z);
+        }
+
+        public void SaveData(ref GameData gameData)
+        {
+            gameData.PlayerPosition =
+                new SerializableVector3(_transform.position.x, _transform.position.y, _transform.position.z);
+        }
     }
 }
