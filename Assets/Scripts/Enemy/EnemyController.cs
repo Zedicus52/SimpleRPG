@@ -7,7 +7,7 @@ using CharacterController = SimpleRPG.Core.CharacterController;
 
 namespace SimpleRPG.Enemy
 {
-    public class EnemyController : CharacterController
+    public sealed class EnemyController : CharacterController
     {
         [Header("Enemy chase settings")]
         [SerializeField] private float _chaseDistance;

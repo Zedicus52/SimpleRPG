@@ -7,7 +7,7 @@ using CharacterController = SimpleRPG.Core.CharacterController;
 namespace SimpleRPG.Player
 {
     [RequireComponent(typeof(NavMeshAgent), typeof(Animator))]
-    public class PlayerController : CharacterController
+    public sealed class PlayerController : CharacterController
     {
         private Camera _mainCamera;
 
@@ -23,8 +23,10 @@ namespace SimpleRPG.Player
             _playerInputActions = new Player_IA();
         }
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
+            
             _mouseClickAction = _playerInputActions.Player.MouseClick;
             _mousePositionAction = _playerInputActions.Player.MousePosition;
 
@@ -34,8 +36,10 @@ namespace SimpleRPG.Player
             _mouseClickAction.performed += OnMouseClick;
         }
         
-        private void OnDisable()
+        protected override void OnDisable()
         {
+            base.OnDisable();
+            
             _mouseClickAction.Disable();
             _mousePositionAction.Disable();
         }

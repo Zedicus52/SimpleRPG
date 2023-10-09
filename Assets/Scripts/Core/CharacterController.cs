@@ -1,3 +1,5 @@
+using System;
+using SimpleRPG.Cinematic;
 using SimpleRPG.Combat;
 using SimpleRPG.Player;
 using UnityEngine;
@@ -18,7 +20,7 @@ namespace SimpleRPG.Core
         
         private Animator _animator;
         protected Transform _transform;
-        protected CombatTarget _combatTarget;
+        private CombatTarget _combatTarget;
 
 
         private Mover _mover;
@@ -33,9 +35,6 @@ namespace SimpleRPG.Core
             _animator = GetComponent<Animator>();
             _transform = GetComponent<Transform>();
             _combatTarget = GetComponent<CombatTarget>();
-
-            
-            
         }
 
         protected virtual void Start()
@@ -45,7 +44,19 @@ namespace SimpleRPG.Core
                 _attackRange, _animator, _attackFrequency, _damage, _combatTarget);
             _actionScheduler = new ActionScheduler();
         }
-        
+
+        protected virtual void OnEnable()
+        {
+            CinematicTriggerZone.CinematicStarted += OnCinematicStared;
+            CinematicTriggerZone.CinematicEnded += OnCinematicEnded;
+        }
+
+        protected virtual void OnDisable()
+        {
+            CinematicTriggerZone.CinematicStarted -= OnCinematicStared;
+            CinematicTriggerZone.CinematicEnded -= OnCinematicEnded;
+        }
+
         protected virtual void Update()
         {
             if(_combatTarget.IsDead)
@@ -53,6 +64,17 @@ namespace SimpleRPG.Core
             
             UpdateAnimator();
             _fighter.Update();
+        }
+
+        private void OnCinematicStared()
+        {
+            _actionScheduler.CancelCurrentAction();
+            _actionScheduler.SetPossibilityToStartNewAction(false);
+        }
+
+        private void OnCinematicEnded()
+        {
+            _actionScheduler.SetPossibilityToStartNewAction(true);
         }
 
         
