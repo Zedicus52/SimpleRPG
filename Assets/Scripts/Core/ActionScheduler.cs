@@ -8,6 +8,9 @@ namespace SimpleRPG.Core
 
         public void StartNewAction(IAction action)
         {
+            if(_currentAction == action)
+                return;
+            
             _currentAction?.Cancel();
             _currentAction = action;
         }

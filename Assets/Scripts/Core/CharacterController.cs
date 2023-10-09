@@ -12,30 +12,40 @@ namespace SimpleRPG.Core
     public abstract class CharacterController : MonoBehaviour
     {
         [Header("Fighter Settings")]
-        [SerializeField] private float _attackRange;
+        [SerializeField] protected float _attackRange;
         [SerializeField] private float _damage;
         [SerializeField] private float _attackFrequency;
         
-        protected Animator _animator;
+        private Animator _animator;
         protected Transform _transform;
+        protected CombatTarget _combatTarget;
+
+
+        private Mover _mover;
+        private Fighter _fighter;
+        private ActionScheduler _actionScheduler;
         
-        protected Mover _mover;
-        protected Fighter _fighter;
-        protected ActionScheduler _actionScheduler;
+        private readonly int _characterSpeed = Animator.StringToHash("CharacterSpeed");
+
         
         protected virtual void Awake()
         {
             _animator = GetComponent<Animator>();
             _transform = GetComponent<Transform>();
+            _combatTarget = GetComponent<CombatTarget>();
+
             
-            _mover = new Mover(GetComponent<NavMeshAgent>());
+            _mover = new Mover(GetComponent<NavMeshAgent>(), GetComponent<CombatTarget>().CharacterHealth);
             _fighter = new Fighter(GetComponent<NavMeshAgent>(), 
-                _attackRange, _animator, _attackFrequency, _damage);
+                _attackRange, _animator, _attackFrequency, _damage, _combatTarget);
             _actionScheduler = new ActionScheduler();
         }
         
         protected virtual void Update()
         {
+            if(_combatTarget.IsDead)
+                return;
+            
             UpdateAnimator();
             _fighter.Update();
         }
@@ -43,6 +53,22 @@ namespace SimpleRPG.Core
         
         public void Hit() => _fighter.Attack();
 
-        protected abstract void UpdateAnimator();
+        private void UpdateAnimator()
+        {
+            Vector3 localVelocity = _transform.InverseTransformDirection(_mover.Velocity);
+            _animator.SetFloat(_characterSpeed, localVelocity.z);
+        }
+
+        protected void StartMoveAction(Vector3 destinationPoint)
+        {
+            _actionScheduler.StartNewAction(_mover);
+            _mover.StartAction(destinationPoint);
+        }
+
+        protected void StartFightAction(CombatTarget target)
+        {
+            _actionScheduler.StartNewAction(_fighter);
+            _fighter.SetTarget(target);
+        }
     }
 }

@@ -15,7 +15,6 @@ namespace SimpleRPG.Player
         private InputAction _mouseClickAction;
         private InputAction _mousePositionAction;
         
-        private readonly int _playerSpeed = Animator.StringToHash("PlayerSpeed");
 
         protected override void Awake()
         {
@@ -56,23 +55,14 @@ namespace SimpleRPG.Player
                 {
                     if(target.IsDead)
                         continue;
-                    _actionScheduler.StartNewAction(_fighter);
-                    _fighter.SetTarget(target);
+                    StartFightAction(target);
                     return;
                 }
             }
             
             if (Physics.Raycast(ray, out RaycastHit hitInfo))
-            {
-                _actionScheduler.StartNewAction(_mover);
-                _mover.StartAction(hitInfo.point);
-            }
+                StartMoveAction(hitInfo.point);
         }
         
-        protected override void UpdateAnimator()
-        {
-            Vector3 localVelocity = _transform.InverseTransformDirection(_mover.Velocity);
-            _animator.SetFloat(_playerSpeed, localVelocity.z);
-        }
     }
 }

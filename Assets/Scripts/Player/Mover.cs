@@ -1,8 +1,8 @@
-using System;
 using SimpleRPG.Abstraction;
+using SimpleRPG.Combat;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem;
+
 
 namespace SimpleRPG.Player
 {
@@ -11,13 +11,18 @@ namespace SimpleRPG.Player
         public Vector3 Velocity => _navMeshAgent.velocity;
         
         private readonly NavMeshAgent _navMeshAgent;
-        public Mover(NavMeshAgent agent)
+        private readonly Health _health;
+        public Mover(NavMeshAgent agent, Health health)
         {
+            _health = health;
             _navMeshAgent = agent;
         }
 
         public void StartAction(Vector3 destinationPoint)
         {
+            if(_health.IsDead)
+                return;
+            
             _navMeshAgent.isStopped = false;
             _navMeshAgent.SetDestination(destinationPoint);
 
