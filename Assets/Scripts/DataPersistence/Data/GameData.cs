@@ -3,8 +3,11 @@ namespace SimpleRPG.DataPersistence.Data
     [System.Serializable]
     public class GameData
     {
-        public SerializableVector3 PlayerPosition;
-
-
+        public PlayerModel Player;
+        
+        public GameData()
+        {
+            Player = new PlayerModel() {LastSceneId = 1};
+        }
     }
 }

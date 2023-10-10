@@ -20,7 +20,7 @@ namespace SimpleRPG.Core
         
         private Animator _animator;
         protected Transform _transform;
-        private CombatTarget _combatTarget;
+        protected CombatTarget _combatTarget;
 
 
         private Mover _mover;

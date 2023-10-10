@@ -1,4 +1,6 @@
 using System;
+using SimpleRPG.DataPersistence;
+using SimpleRPG.DataPersistence.Data;
 using SimpleRPG.Player;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -6,7 +8,7 @@ using UnityEngine.Playables;
 namespace SimpleRPG.Cinematic
 {
     [RequireComponent(typeof(BoxCollider))]
-    public class CinematicTriggerZone : MonoBehaviour
+    public class CinematicTriggerZone : MonoBehaviour, IDataPersistence
     {
         public static event Action CinematicStarted;
         public static event Action CinematicEnded;
@@ -37,6 +39,15 @@ namespace SimpleRPG.Cinematic
             cinematic.stopped -= OnCinematicStopped;
             CinematicEnded?.Invoke();
         }
-        
+
+        public void LoadData(GameData gameData)
+        {
+            
+        }
+
+        public void SaveData(ref GameData gameData)
+        {
+            
+        }
     }
 }

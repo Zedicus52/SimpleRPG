@@ -36,14 +36,16 @@ namespace SimpleRPG.Enemy
                 _nextPatrolPoint = _patrolPath.GetNextPatrolPoint(0);
             }
             _startPosition = _transform.position;
-            _playerTransform = FindObjectOfType<PlayerController>().transform;
-            _playerCombatTarget = FindObjectOfType<PlayerController>().GetComponent<CombatTarget>();
             _isAttack = false;
         }
 
         protected override void Start()
         {
             base.Start();
+            
+            _playerTransform = FindObjectOfType<PlayerController>().transform;
+            _playerCombatTarget = FindObjectOfType<PlayerController>().GetComponent<CombatTarget>();
+            
             if (!_patrolPath) 
                 return;
             
@@ -93,8 +95,11 @@ namespace SimpleRPG.Enemy
 
         }
 
-        private float GetDistanceToPlayer() => 
-            Vector3.Distance(_transform.position, _playerTransform.position);
+        private float GetDistanceToPlayer()
+        {
+            
+            return Vector3.Distance(_transform.position, _playerTransform.position);
+        }
 
         private float GetDistanceToNextPatrolPoint() => 
             Vector3.Distance(_transform.position, _nextPatrolPoint.Position);

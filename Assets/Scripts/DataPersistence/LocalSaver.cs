@@ -21,9 +21,12 @@ namespace SimpleRPG.DataPersistence
         public async Task LoadGame()
         {
             _gameData = await _dataHandler.Load();
-            
-            if(_gameData == null)
+
+            if (_gameData == null)
+            {
                 StartNewGame();
+                return;
+            }
 
             foreach (IDataPersistence dataPersistenceObj in _dataPersistenceObjects)
                 dataPersistenceObj.LoadData(_gameData);
@@ -33,7 +36,6 @@ namespace SimpleRPG.DataPersistence
 
         public async void SaveGame()
         {
-            _gameData = new GameData();
             foreach (IDataPersistence dataPersistenceObj in _dataPersistenceObjects)
                 dataPersistenceObj.SaveData(ref _gameData);
 
@@ -45,5 +47,8 @@ namespace SimpleRPG.DataPersistence
 
         public void UnRegisterObject(IDataPersistence dataPersistence) =>
             _dataPersistenceObjects.Remove(dataPersistence);
+
+        public GameData GetCurrentSave() => _gameData;
+
     }
 }

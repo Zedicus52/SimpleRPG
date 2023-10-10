@@ -5,6 +5,7 @@ namespace SimpleRPG.Combat
     public class Health
     {
         public bool IsDead => _currentHealth <= 0;
+        public float CurrentHealth => _currentHealth;
         
         private readonly float _maxHealth;
         private readonly Animator _animator;

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using SimpleRPG.DataPersistence;
+using SimpleRPG.DataPersistence.Data;
 
 namespace SimpleRPG.Abstraction
 {
@@ -10,5 +11,7 @@ namespace SimpleRPG.Abstraction
         void SaveGame();
         void RegisterObject(IDataPersistence dataPersistence);
         void UnRegisterObject(IDataPersistence dataPersistence);
+
+        GameData GetCurrentSave();
     }
 }

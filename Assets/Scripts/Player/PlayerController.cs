@@ -6,6 +6,7 @@ using SimpleRPG.DataPersistence.Data;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using CharacterController = SimpleRPG.Core.CharacterController;
 
 namespace SimpleRPG.Player
@@ -18,6 +19,8 @@ namespace SimpleRPG.Player
         private Player_IA _playerInputActions;
         private InputAction _mouseClickAction;
         private InputAction _mousePositionAction;
+
+        private Checkpoint _lastCheckpoint;
         
 
         protected override void Awake()
@@ -81,14 +84,25 @@ namespace SimpleRPG.Player
 
         public void LoadData(GameData gameData)
         {
-            _transform.position = new Vector3(gameData.PlayerPosition.X, gameData.PlayerPosition.Y,
-                gameData.PlayerPosition.Z);
+            var pos = gameData.Player.Position;
+            var rotation = gameData.Player.Rotation;
+            _combatTarget.CreateHealth(gameData.Player.Health);
+            _transform.position = new Vector3(pos.X, pos.Y, pos.Z);
+            _transform.rotation = Quaternion.Euler(rotation.X, rotation.Y, rotation.Z);
         }
 
         public void SaveData(ref GameData gameData)
         {
-            gameData.PlayerPosition =
-                new SerializableVector3(_transform.position.x, _transform.position.y, _transform.position.z);
+            var rotation = _transform.rotation;
+            var position = _lastCheckpoint == null ? 
+                LevelContext.Instance.SpawnPoint.position : _lastCheckpoint.SpawnPoint.position;
+
+            gameData.Player.LastSceneId = SceneManager.GetActiveScene().buildIndex;
+            gameData.Player.Health = _combatTarget.CharacterHealth.CurrentHealth;
+            gameData.Player.Position = new SerializableVector3(position.x, position.y, position.z);
+            gameData.Player.Rotation = new SerializableVector3(rotation.x, rotation.y, rotation.z);
         }
+
+        public void SetLastCheckpoint(Checkpoint checkpoint) => _lastCheckpoint = checkpoint;
     }
 }
