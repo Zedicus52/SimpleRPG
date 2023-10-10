@@ -8,6 +8,7 @@ namespace SimpleRPG.Core
     [RequireComponent(typeof(BoxCollider), typeof(Rigidbody))]
     public class Checkpoint : MonoBehaviour
     {
+        public string Id => _checkpointData.Id;
         public Transform SpawnPoint => _spawnPoint;
         
         [SerializeField] private CheckpointSO _checkpointData;
@@ -27,10 +28,13 @@ namespace SimpleRPG.Core
             if (other.TryGetComponent(out PlayerController player) && _isReached == false)
             {
                 _isReached = true;
+                _checkpointData.SetIsReached();
                 player.SetLastCheckpoint(this);
             }
         }
 
-        
+        public void SetIsReached() => _isReached = true;
+
+
     }
 }

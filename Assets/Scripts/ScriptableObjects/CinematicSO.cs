@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace SimpleRPG.ScriptableObjects
 {
-    [CreateAssetMenu(fileName = "Checkpoint", menuName = "RPG/Checkpoint", order = 0)]
-    public class CheckpointSO : ScriptableObject
+    [CreateAssetMenu(fileName = "Cinematic", menuName = "RPG/Cinematic", order = 0)]
+    public class CinematicSO : ScriptableObject
     {
         public string Id => _id;
-        public bool IsReached => _isReached;
+        public bool IsPlayed => _isPlayed;
         
-        private bool _isReached;
+        private bool _isPlayed;
         [SerializeField] private string _id;
 
 
@@ -20,6 +20,6 @@ namespace SimpleRPG.ScriptableObjects
                 _id = Guid.NewGuid().ToString();
         }
 
-        public void SetIsReached() => _isReached = true;
+        public void SetIsPlayed() => _isPlayed = true;
     }
 }
