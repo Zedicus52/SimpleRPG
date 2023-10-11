@@ -2459,7 +2459,7 @@ Transform:
   m_Children:
   - {fileID: 8141604234063038712}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!195 &2050017928192913204
 NavMeshAgent:
@@ -2516,8 +2516,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4fbe3d421044001996571b1181a8b83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _attackRange: 3
-  _damage: 5
+  _rightHandTransform: {fileID: 8215813408967519948}
+  _leftHandTransform: {fileID: 4943582179295901020}
+  _currentWeapon: {fileID: 11400000, guid: f33537e80618c3343a8cba890131886e, type: 2}
   _attackFrequency: 2
   _chaseDistance: 5
   _returnToStartPosition: 1

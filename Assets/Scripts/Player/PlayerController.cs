@@ -3,6 +3,7 @@ using SimpleRPG.Combat;
 using SimpleRPG.Core;
 using SimpleRPG.DataPersistence;
 using SimpleRPG.DataPersistence.Data;
+using SimpleRPG.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
@@ -104,5 +105,13 @@ namespace SimpleRPG.Player
         }
 
         public void SetLastCheckpoint(Checkpoint checkpoint) => _lastCheckpoint = checkpoint;
+
+        public void SetWeapon(WeaponSO weapon)
+        {
+            _currentWeapon = weapon;
+            _currentWeapon.SpawnWeapon(_rightHandTransform, _leftHandTransform, _animator);
+            _fighter.SetDamage(_currentWeapon.Damage);
+            _fighter.SetAttackDistance(_currentWeapon.AttackRange);
+        }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using SimpleRPG.Cinematic;
 using SimpleRPG.Combat;
 using SimpleRPG.Player;
+using SimpleRPG.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -13,18 +14,19 @@ namespace SimpleRPG.Core
         typeof(CombatTarget))]
     public abstract class CharacterController : MonoBehaviour
     {
-        [Header("Fighter Settings")]
-        [SerializeField] protected float _attackRange;
-        [SerializeField] private float _damage;
+        [Header("Fighter Settings")] 
+        [SerializeField] protected Transform _rightHandTransform;
+        [SerializeField] protected Transform _leftHandTransform;
+        [SerializeField] protected WeaponSO _currentWeapon;
         [SerializeField] private float _attackFrequency;
         
-        private Animator _animator;
+        protected Animator _animator;
         protected Transform _transform;
         protected CombatTarget _combatTarget;
 
 
         private Mover _mover;
-        private Fighter _fighter;
+        protected Fighter _fighter;
         private ActionScheduler _actionScheduler;
         
         private readonly int _characterSpeed = Animator.StringToHash("CharacterSpeed");
@@ -35,13 +37,14 @@ namespace SimpleRPG.Core
             _animator = GetComponent<Animator>();
             _transform = GetComponent<Transform>();
             _combatTarget = GetComponent<CombatTarget>();
+            SpawnWeapon();
         }
 
         protected virtual void Start()
         {
             _mover = new Mover(GetComponent<NavMeshAgent>(), GetComponent<CombatTarget>().CharacterHealth);
             _fighter = new Fighter(GetComponent<NavMeshAgent>(), 
-                _attackRange, _animator, _attackFrequency, _damage, _combatTarget);
+                _currentWeapon.AttackRange, _animator, _attackFrequency, _currentWeapon.Damage, _combatTarget);
             _actionScheduler = new ActionScheduler();
         }
 
@@ -96,6 +99,11 @@ namespace SimpleRPG.Core
         {
             _actionScheduler.StartNewAction(_fighter);
             _fighter.SetTarget(target);
+        }
+
+        private void SpawnWeapon()
+        {
+            _currentWeapon.SpawnWeapon(_rightHandTransform, _leftHandTransform, _animator);
         }
     }
 }

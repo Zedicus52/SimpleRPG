@@ -7,8 +7,8 @@ namespace SimpleRPG.Combat
     public class Fighter : IAction
     {
         private readonly NavMeshAgent _navMeshAgent;
-        private readonly float _attackDistance;
-        private readonly float _damage;
+        private float _attackDistance;
+        private float _damage;
         private readonly float _attackFrequency;
         private readonly Animator _animator;
         private readonly CombatTarget _target;
@@ -61,6 +61,9 @@ namespace SimpleRPG.Combat
             _animator.ResetTrigger(_attack);
             _currentTarget = null;
         }
+
+        public void SetDamage(float damage) => _damage = damage;
+        public void SetAttackDistance(float distance) => _attackDistance = distance;
 
         public void Update()
         {
