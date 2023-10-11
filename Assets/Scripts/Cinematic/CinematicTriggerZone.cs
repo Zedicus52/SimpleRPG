@@ -1,5 +1,8 @@
 using System;
+using SimpleRPG.DataPersistence;
+using SimpleRPG.DataPersistence.Data;
 using SimpleRPG.Player;
+using SimpleRPG.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -10,7 +13,10 @@ namespace SimpleRPG.Cinematic
     {
         public static event Action CinematicStarted;
         public static event Action CinematicEnded;
-        
+
+        public string Id => _cinematicData.Id;
+
+        [SerializeField] private CinematicSO _cinematicData;
         [SerializeField] private PlayableDirector _cinematic;
 
         private bool _isPlayed;
@@ -26,6 +32,7 @@ namespace SimpleRPG.Cinematic
             if (other.TryGetComponent(out PlayerController player) && _isPlayed == false)
             {
                 _isPlayed = true;
+                _cinematicData.SetIsPlayed();
                 _cinematic.Play();
                 _cinematic.stopped += OnCinematicStopped;
                 CinematicStarted?.Invoke();
@@ -37,6 +44,9 @@ namespace SimpleRPG.Cinematic
             cinematic.stopped -= OnCinematicStopped;
             CinematicEnded?.Invoke();
         }
-        
+
+        public void SetIsPlayed() => _isPlayed = true;
+
+
     }
 }

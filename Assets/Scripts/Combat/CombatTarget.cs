@@ -13,12 +13,17 @@ namespace SimpleRPG.Combat
         [SerializeField] private float _maxHealth;
         
         private Health _health;
+        private Animator _animator;
 
         private void Awake()
         {
-            _health = new Health(_maxHealth, GetComponent<Animator>());
+            _animator = GetComponent<Animator>();
+            CreateHealth(_maxHealth);
         }
 
         public void TakeDamage(float damage) => _health.TakeDamage(damage);
+
+        public void CreateHealth(float health) => 
+            _health = new Health(health, _animator);
     }
 }
