@@ -7,6 +7,7 @@ namespace SimpleRPG.Combat
     public class Projectile : MonoBehaviour
     {
         [SerializeField] private float _speed;
+        [SerializeField] private bool _isHoming;
 
         private Transform _transform;
         private CombatTarget _target;
@@ -18,10 +19,7 @@ namespace SimpleRPG.Combat
             _transform = GetComponent<Transform>();
         }
 
-        private void Start()
-        {
-            _transform.LookAt(GetDestination());
-        }
+        private void Start() => _transform.LookAt(GetDestination());
 
         private void Update()
         {
@@ -29,6 +27,9 @@ namespace SimpleRPG.Combat
             if(destination == Vector3.zero)
                 return;
 
+            if(_isHoming)
+                _transform.LookAt(GetDestination());
+            
             _transform.Translate(Vector3.forward * (_speed * Time.deltaTime));
         }
 
@@ -36,8 +37,11 @@ namespace SimpleRPG.Combat
         {
             if (other.TryGetComponent(out CombatTarget target))
             {
-                target.TakeDamage(_damage);
-                Destroy(gameObject);
+                if (_target == target)
+                {
+                    target.TakeDamage(_damage);
+                    Destroy(gameObject);
+                }
             }
         }
 
