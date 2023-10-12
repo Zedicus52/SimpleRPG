@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c574b54a5ab143bf943cf61c5fb5abcd, type: 3}
   m_Name: Bow
   m_EditorClassIdentifier: 
+  _id: 92e41fed-ee51-40bc-a881-0662995b5fb1
   _animatorOverride: {fileID: 22100000, guid: 6e8c6233fec6726429309ecef280e830, type: 2}
   _weaponPrefab: {fileID: 370506567763324682, guid: 96845c8993dc7a44199687da10c229ed, type: 3}
   _damage: 10

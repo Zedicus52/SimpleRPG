@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c574b54a5ab143bf943cf61c5fb5abcd, type: 3}
   m_Name: HomigBow
   m_EditorClassIdentifier: 
+  _id: 5cdef25f-f7e5-4054-b85a-f513e7916cd2
   _animatorOverride: {fileID: 22100000, guid: 6e8c6233fec6726429309ecef280e830, type: 2}
   _weaponPrefab: {fileID: 370506567763324682, guid: 96845c8993dc7a44199687da10c229ed, type: 3}
   _damage: 5

@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using SimpleRPG.Abstraction;
 using SimpleRPG.DataPersistence;
 using SimpleRPG.DataPersistence.Data;
 using SimpleRPG.Player;
 using SimpleRPG.SceneManagement;
+using SimpleRPG.ScriptableObjects;
 using UnityEngine;
 
 namespace SimpleRPG.Core
@@ -15,6 +18,9 @@ namespace SimpleRPG.Core
         public ISaver Saver { get; private set; }
         
         [SerializeField] private PlayerController _playerPrefab;
+        
+        [Header("Weapons")] 
+        [SerializeField] private List<WeaponSO> _allWeapons;
         private void Awake()
         {
             if (Instance == null)
@@ -74,7 +80,10 @@ namespace SimpleRPG.Core
             }
             
         }
-        
+
+        public WeaponSO GetWeaponById(string id) => 
+            _allWeapons.FirstOrDefault(x => x.Id.Equals(id));
+
         private void SpawnPlayer(Vector3 position, Quaternion rotation)
         {
             PlayerController player = Instantiate(_playerPrefab, position, rotation);

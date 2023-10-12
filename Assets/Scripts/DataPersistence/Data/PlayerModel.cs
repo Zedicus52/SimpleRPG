@@ -7,6 +7,7 @@ namespace SimpleRPG.DataPersistence.Data
         public SerializableVector3 Position;
         public SerializableVector3 Rotation;
         public int LastSceneId;
+        public string WeaponId;
 
     }
 }

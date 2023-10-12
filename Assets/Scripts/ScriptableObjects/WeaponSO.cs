@@ -1,3 +1,4 @@
+using System;
 using SimpleRPG.Combat;
 using UnityEngine;
 
@@ -6,15 +7,25 @@ namespace SimpleRPG.ScriptableObjects
     [CreateAssetMenu(fileName = "Weapon", menuName = "RPG/Weapon", order = 0)]
     public class WeaponSO : ScriptableObject
     {
+
+        public string Id => _id;
         public float Damage => _damage;
         public float AttackRange => _attackRange;
-        
+
+        [SerializeField] private string _id;
         [SerializeField] private AnimatorOverrideController _animatorOverride;
         [SerializeField] private WeaponHolder _weaponPrefab;
         [SerializeField] private float _damage;
         [SerializeField] private float _attackRange;
         [SerializeField] private bool _isRightHanded;
         [SerializeField] private Projectile _projectile;
+
+        [ContextMenu("Generate Id")]
+        private void GenerateId()
+        {
+            if (String.IsNullOrEmpty(_id))
+                _id = Guid.NewGuid().ToString();
+        }
         public WeaponHolder SpawnWeapon(Transform rightHand, Transform leftHand, Animator animator)
         {
             if (_animatorOverride != null)

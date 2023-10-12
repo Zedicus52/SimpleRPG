@@ -91,6 +91,9 @@ namespace SimpleRPG.Player
             _combatTarget.CreateHealth(gameData.Player.Health);
             _transform.position = new Vector3(pos.X, pos.Y, pos.Z);
             _transform.rotation = Quaternion.Euler(rotation.X, rotation.Y, rotation.Z);
+            var weapon = GameContext.Instance.GetWeaponById(gameData.Player.WeaponId);
+            if (weapon)
+                SetWeapon(weapon);
         }
 
         public void SaveData(ref GameData gameData)
@@ -103,6 +106,7 @@ namespace SimpleRPG.Player
             gameData.Player.Health = _combatTarget.CharacterHealth.CurrentHealth;
             gameData.Player.Position = new SerializableVector3(position.x, position.y, position.z);
             gameData.Player.Rotation = new SerializableVector3(rotation.x, rotation.y, rotation.z);
+            gameData.Player.WeaponId = _currentWeapon.Id;
         }
 
         public void SetLastCheckpoint(Checkpoint checkpoint) => _lastCheckpoint = checkpoint;
@@ -110,7 +114,7 @@ namespace SimpleRPG.Player
         public void SetWeapon(WeaponSO weapon)
         {
             _currentWeapon = weapon;
-            if(_lastWeapon != null)
+            if(_lastWeapon)
                 Destroy(_lastWeapon.gameObject);
             _lastWeapon = _currentWeapon.SpawnWeapon(_rightHandTransform, _leftHandTransform, _animator);
             _fighter.SetWeapon(weapon);
