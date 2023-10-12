@@ -22,6 +22,7 @@ namespace SimpleRPG.Player
         private InputAction _mousePositionAction;
 
         private Checkpoint _lastCheckpoint;
+        private WeaponHolder _lastWeapon;
         
 
         protected override void Awake()
@@ -109,9 +110,10 @@ namespace SimpleRPG.Player
         public void SetWeapon(WeaponSO weapon)
         {
             _currentWeapon = weapon;
-            _currentWeapon.SpawnWeapon(_rightHandTransform, _leftHandTransform, _animator);
-            _fighter.SetDamage(_currentWeapon.Damage);
-            _fighter.SetAttackDistance(_currentWeapon.AttackRange);
+            if(_lastWeapon != null)
+                Destroy(_lastWeapon.gameObject);
+            _lastWeapon = _currentWeapon.SpawnWeapon(_rightHandTransform, _leftHandTransform, _animator);
+            _fighter.SetWeapon(weapon);
         }
     }
 }

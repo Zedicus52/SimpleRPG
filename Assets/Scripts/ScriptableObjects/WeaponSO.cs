@@ -14,18 +14,35 @@ namespace SimpleRPG.ScriptableObjects
         [SerializeField] private float _damage;
         [SerializeField] private float _attackRange;
         [SerializeField] private bool _isRightHanded;
-
-        public void SpawnWeapon(Transform rightHand, Transform leftHand, Animator animator)
+        [SerializeField] private Projectile _projectile;
+        public WeaponHolder SpawnWeapon(Transform rightHand, Transform leftHand, Animator animator)
         {
-            if (_weaponPrefab != null)
-            {
-                Instantiate(_weaponPrefab, _isRightHanded ? rightHand : leftHand);
-            }
-
             if (_animatorOverride != null)
             {
                 animator.runtimeAnimatorController = _animatorOverride;
             }
+            
+            if (_weaponPrefab != null)
+            {
+                return Instantiate(_weaponPrefab, GetTransform(leftHand, rightHand));
+            }
+
+            return null;
         }
+
+        public bool HasProjectile() => _projectile != null;
+
+        public void LaunchProjectile(Transform leftHand, Transform rightHand, CombatTarget target)
+        {
+            if(HasProjectile() == false)
+                return;
+
+            Transform transform = GetTransform(leftHand, rightHand);
+            Projectile proj = Instantiate(_projectile, transform.position, Quaternion.identity);
+            proj.SetTarget(target);
+            proj.SetDamage(_damage);
+        }
+
+        private Transform GetTransform(Transform leftHand, Transform rightHand) => _isRightHanded ? rightHand : leftHand;
     }
 }

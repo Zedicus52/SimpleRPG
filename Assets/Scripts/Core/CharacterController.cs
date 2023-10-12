@@ -44,7 +44,7 @@ namespace SimpleRPG.Core
         {
             _mover = new Mover(GetComponent<NavMeshAgent>(), GetComponent<CombatTarget>().CharacterHealth);
             _fighter = new Fighter(GetComponent<NavMeshAgent>(), 
-                _currentWeapon.AttackRange, _animator, _attackFrequency, _currentWeapon.Damage, _combatTarget);
+                 _animator, _attackFrequency, _currentWeapon, _combatTarget, _rightHandTransform, _leftHandTransform);
             _actionScheduler = new ActionScheduler();
         }
 
