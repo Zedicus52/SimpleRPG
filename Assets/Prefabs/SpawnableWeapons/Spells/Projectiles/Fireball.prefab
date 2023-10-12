@@ -4957,6 +4957,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 8
   _isHoming: 0
+  _impactEffect: {fileID: 4534076104150748108, guid: 6586ff0f14125534cae2f5d8f04b7871, type: 3}
 --- !u!54 &371212558840839737
 Rigidbody:
   m_ObjectHideFlags: 0

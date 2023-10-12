@@ -84,6 +84,10 @@ PrefabInstance:
       propertyPath: _isHoming
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3526342121117547404, guid: 92c2013a9cf313748babcd960bc89750, type: 3}
+      propertyPath: _impactEffect
+      value: 
+      objectReference: {fileID: 4534076104150748108, guid: 6586ff0f14125534cae2f5d8f04b7871, type: 3}
     - target: {fileID: 4610990746131510929, guid: 92c2013a9cf313748babcd960bc89750, type: 3}
       propertyPath: m_Name
       value: RedArrow

@@ -216,6 +216,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 20
   _isHoming: 0
+  _impactEffect: {fileID: 3289552373594799997, guid: cd4d7020429cde74db076ffa72495419, type: 3}
 --- !u!54 &6691348329975337498
 Rigidbody:
   m_ObjectHideFlags: 0

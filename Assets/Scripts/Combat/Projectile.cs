@@ -1,5 +1,9 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using SimpleRPG.Core;
 using UnityEngine;
+using Quaternion = System.Numerics.Quaternion;
 
 namespace SimpleRPG.Combat
 {
@@ -8,10 +12,13 @@ namespace SimpleRPG.Combat
     {
         [SerializeField] private float _speed;
         [SerializeField] private bool _isHoming;
+        [SerializeField] private ImpactEffect _impactEffect;
 
         private Transform _transform;
         private CombatTarget _target;
         private float _damage;
+        private readonly float _lifeTime = 10f;
+        private float _currentTime;
 
         private void Awake()
         {
@@ -31,6 +38,11 @@ namespace SimpleRPG.Combat
                 _transform.LookAt(GetDestination());
             
             _transform.Translate(Vector3.forward * (_speed * Time.deltaTime));
+            
+            if(_currentTime >= _lifeTime)
+                Destroy(gameObject);
+            _currentTime += Time.deltaTime;
+
         }
 
         private void OnTriggerEnter(Collider other)
@@ -40,6 +52,8 @@ namespace SimpleRPG.Combat
                 if (_target == target)
                 {
                     target.TakeDamage(_damage);
+                    if(_impactEffect)
+                        Instantiate(_impactEffect, other.transform.position, UnityEngine.Quaternion.identity);
                     Destroy(gameObject);
                 }
             }
@@ -59,6 +73,7 @@ namespace SimpleRPG.Combat
 
         public void SetTarget(CombatTarget target) => _target = target;
         public void SetDamage(float damage) => _damage = damage;
+        
 
     }
 }
