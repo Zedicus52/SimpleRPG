@@ -23,10 +23,12 @@ namespace SimpleRPG.Player
 
         private Checkpoint _lastCheckpoint;
         private WeaponHolder _lastWeapon;
-        
+        private NavMeshAgent _navMeshAgent;
+
 
         protected override void Awake()
         {
+            _navMeshAgent = GetComponent<NavMeshAgent>();
             base.Awake();
             GameContext.Instance.Saver.RegisterObject(this);
             _mainCamera = Camera.main;
@@ -117,6 +119,8 @@ namespace SimpleRPG.Player
             if(_lastWeapon)
                 Destroy(_lastWeapon.gameObject);
             _lastWeapon = _currentWeapon.SpawnWeapon(_rightHandTransform, _leftHandTransform, _animator);
+            _fighter ??= new Fighter(_navMeshAgent,
+                _animator, _attackFrequency, _currentWeapon, _combatTarget, _rightHandTransform, _leftHandTransform);
             _fighter.SetWeapon(weapon);
         }
     }

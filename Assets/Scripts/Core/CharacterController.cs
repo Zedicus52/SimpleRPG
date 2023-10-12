@@ -18,7 +18,7 @@ namespace SimpleRPG.Core
         [SerializeField] protected Transform _rightHandTransform;
         [SerializeField] protected Transform _leftHandTransform;
         [SerializeField] protected WeaponSO _currentWeapon;
-        [SerializeField] private float _attackFrequency;
+        [SerializeField] protected float _attackFrequency;
         
         protected Animator _animator;
         protected Transform _transform;
@@ -43,8 +43,8 @@ namespace SimpleRPG.Core
         protected virtual void Start()
         {
             _mover = new Mover(GetComponent<NavMeshAgent>(), GetComponent<CombatTarget>().CharacterHealth);
-            _fighter = new Fighter(GetComponent<NavMeshAgent>(), 
-                 _animator, _attackFrequency, _currentWeapon, _combatTarget, _rightHandTransform, _leftHandTransform);
+            _fighter ??= new Fighter(GetComponent<NavMeshAgent>(),
+                _animator, _attackFrequency, _currentWeapon, _combatTarget, _rightHandTransform, _leftHandTransform);
             _actionScheduler = new ActionScheduler();
         }
 
