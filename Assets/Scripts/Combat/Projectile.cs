@@ -18,13 +18,17 @@ namespace SimpleRPG.Combat
             _transform = GetComponent<Transform>();
         }
 
+        private void Start()
+        {
+            _transform.LookAt(GetDestination());
+        }
+
         private void Update()
         {
             Vector3 destination = GetDestination();
             if(destination == Vector3.zero)
                 return;
-            
-            _transform.LookAt(destination);
+
             _transform.Translate(Vector3.forward * (_speed * Time.deltaTime));
         }
 
