@@ -11,6 +11,9 @@ namespace SimpleRPG.Combat
         
         [Header("Health Settings")] 
         [SerializeField] private float _maxHealth;
+
+        [Header("Experience settings")] 
+        [SerializeField] private int _dropExperience;
         
         private Health _health;
         private Animator _animator;
@@ -24,6 +27,6 @@ namespace SimpleRPG.Combat
         public void TakeDamage(float damage) => _health.TakeDamage(damage);
 
         public void CreateHealth(float health) => 
-            _health = new Health(health, _animator);
+            _health = new Health(health, _animator, _dropExperience);
     }
 }

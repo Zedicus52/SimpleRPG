@@ -81,6 +81,34 @@ public partial class @Player_IA: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""PlayerUI"",
+            ""id"": ""6935970c-dd36-45cf-9725-c9d9e5fe2b18"",
+            ""actions"": [
+                {
+                    ""name"": ""OpenSkillsTree"",
+                    ""type"": ""Button"",
+                    ""id"": ""47d37e7f-fad7-4401-94a2-e78586ae59d2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""ad9a3656-9572-4682-8ed7-61f673b63432"",
+                    ""path"": ""<Keyboard>/l"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpenSkillsTree"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -89,6 +117,9 @@ public partial class @Player_IA: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_MouseClick = m_Player.FindAction("MouseClick", throwIfNotFound: true);
         m_Player_MousePosition = m_Player.FindAction("MousePosition", throwIfNotFound: true);
+        // PlayerUI
+        m_PlayerUI = asset.FindActionMap("PlayerUI", throwIfNotFound: true);
+        m_PlayerUI_OpenSkillsTree = m_PlayerUI.FindAction("OpenSkillsTree", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -200,9 +231,59 @@ public partial class @Player_IA: IInputActionCollection2, IDisposable
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
+
+    // PlayerUI
+    private readonly InputActionMap m_PlayerUI;
+    private List<IPlayerUIActions> m_PlayerUIActionsCallbackInterfaces = new List<IPlayerUIActions>();
+    private readonly InputAction m_PlayerUI_OpenSkillsTree;
+    public struct PlayerUIActions
+    {
+        private @Player_IA m_Wrapper;
+        public PlayerUIActions(@Player_IA wrapper) { m_Wrapper = wrapper; }
+        public InputAction @OpenSkillsTree => m_Wrapper.m_PlayerUI_OpenSkillsTree;
+        public InputActionMap Get() { return m_Wrapper.m_PlayerUI; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(PlayerUIActions set) { return set.Get(); }
+        public void AddCallbacks(IPlayerUIActions instance)
+        {
+            if (instance == null || m_Wrapper.m_PlayerUIActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_PlayerUIActionsCallbackInterfaces.Add(instance);
+            @OpenSkillsTree.started += instance.OnOpenSkillsTree;
+            @OpenSkillsTree.performed += instance.OnOpenSkillsTree;
+            @OpenSkillsTree.canceled += instance.OnOpenSkillsTree;
+        }
+
+        private void UnregisterCallbacks(IPlayerUIActions instance)
+        {
+            @OpenSkillsTree.started -= instance.OnOpenSkillsTree;
+            @OpenSkillsTree.performed -= instance.OnOpenSkillsTree;
+            @OpenSkillsTree.canceled -= instance.OnOpenSkillsTree;
+        }
+
+        public void RemoveCallbacks(IPlayerUIActions instance)
+        {
+            if (m_Wrapper.m_PlayerUIActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IPlayerUIActions instance)
+        {
+            foreach (var item in m_Wrapper.m_PlayerUIActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_PlayerUIActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public PlayerUIActions @PlayerUI => new PlayerUIActions(this);
     public interface IPlayerActions
     {
         void OnMouseClick(InputAction.CallbackContext context);
         void OnMousePosition(InputAction.CallbackContext context);
+    }
+    public interface IPlayerUIActions
+    {
+        void OnOpenSkillsTree(InputAction.CallbackContext context);
     }
 }
