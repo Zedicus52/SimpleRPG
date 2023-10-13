@@ -58,12 +58,12 @@ namespace SimpleRPG.Enemy
             base.Update();
             
             float distanceToPlayer = GetDistanceToPlayer();
-            if (distanceToPlayer < _attackRange && !_isAttack)
+            if (distanceToPlayer < _currentWeapon.AttackRange && !_isAttack)
             {
                 StartFightAction(_playerCombatTarget);
                 _isAttack = true;
             }
-            else if (distanceToPlayer < _chaseDistance && distanceToPlayer > _attackRange)
+            else if (distanceToPlayer < _chaseDistance && distanceToPlayer > _currentWeapon.AttackRange)
             {
                 StartMoveAction(_playerTransform.position);
                 _isAttack = false;

@@ -3,6 +3,7 @@ using SimpleRPG.Combat;
 using SimpleRPG.Core;
 using SimpleRPG.DataPersistence;
 using SimpleRPG.DataPersistence.Data;
+using SimpleRPG.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
@@ -21,10 +22,13 @@ namespace SimpleRPG.Player
         private InputAction _mousePositionAction;
 
         private Checkpoint _lastCheckpoint;
-        
+        private WeaponHolder _lastWeapon;
+        private NavMeshAgent _navMeshAgent;
+
 
         protected override void Awake()
         {
+            _navMeshAgent = GetComponent<NavMeshAgent>();
             base.Awake();
             GameContext.Instance.Saver.RegisterObject(this);
             _mainCamera = Camera.main;
@@ -89,6 +93,9 @@ namespace SimpleRPG.Player
             _combatTarget.CreateHealth(gameData.Player.Health);
             _transform.position = new Vector3(pos.X, pos.Y, pos.Z);
             _transform.rotation = Quaternion.Euler(rotation.X, rotation.Y, rotation.Z);
+            var weapon = GameContext.Instance.GetWeaponById(gameData.Player.WeaponId);
+            if (weapon)
+                SetWeapon(weapon);
         }
 
         public void SaveData(ref GameData gameData)
@@ -101,8 +108,20 @@ namespace SimpleRPG.Player
             gameData.Player.Health = _combatTarget.CharacterHealth.CurrentHealth;
             gameData.Player.Position = new SerializableVector3(position.x, position.y, position.z);
             gameData.Player.Rotation = new SerializableVector3(rotation.x, rotation.y, rotation.z);
+            gameData.Player.WeaponId = _currentWeapon.Id;
         }
 
         public void SetLastCheckpoint(Checkpoint checkpoint) => _lastCheckpoint = checkpoint;
+
+        public void SetWeapon(WeaponSO weapon)
+        {
+            _currentWeapon = weapon;
+            if(_lastWeapon)
+                Destroy(_lastWeapon.gameObject);
+            _lastWeapon = _currentWeapon.SpawnWeapon(_rightHandTransform, _leftHandTransform, _animator);
+            _fighter ??= new Fighter(_navMeshAgent,
+                _animator, _attackFrequency, _currentWeapon, _combatTarget, _rightHandTransform, _leftHandTransform);
+            _fighter.SetWeapon(weapon);
+        }
     }
 }

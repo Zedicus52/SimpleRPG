@@ -1394,8 +1394,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c3cf2209d124431b5f6940e88f524eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _attackRange: 3
-  _damage: 5
+  _rightHandTransform: {fileID: 5582670047137105557}
+  _leftHandTransform: {fileID: 1831329861869024165}
+  _currentWeapon: {fileID: 11400000, guid: f33537e80618c3343a8cba890131886e, type: 2}
   _attackFrequency: 2
 --- !u!114 &5473654973317384605
 MonoBehaviour:
@@ -1918,7 +1919,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3274933367165936358}
   m_LocalRotation: {x: 0.3353253, y: -0.08832446, z: 0.031741157, w: 0.9374157}
-  m_LocalPosition: {x: 2.1646, y: 9.514285, z: -11.392682}
+  m_LocalPosition: {x: 2.1645932, y: 9.514282, z: -11.392672}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
