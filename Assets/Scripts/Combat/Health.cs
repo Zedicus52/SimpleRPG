@@ -11,7 +11,7 @@ namespace SimpleRPG.Combat
         public float CurrentHealth => _currentHealth;
         public float MaxHealth => _maxHealth;
         
-        private readonly float _maxHealth;
+        private float _maxHealth;
         private readonly Animator _animator;
         private readonly int _dropExperience;
         
@@ -19,9 +19,10 @@ namespace SimpleRPG.Combat
 
         private readonly int _die = Animator.StringToHash("Die");
 
-        public Health(float maxHealth, Animator animator, int dropExperience)
+        public Health(float maxHealth, float currentHealth, Animator animator, int dropExperience)
         {
             _maxHealth = maxHealth;
+            _currentHealth = currentHealth;
             _animator = animator;
             _dropExperience = dropExperience;
             _currentHealth = _maxHealth;
@@ -39,6 +40,11 @@ namespace SimpleRPG.Combat
                 _animator.SetTrigger(_die);
                 CharacterDie?.Invoke(_dropExperience);
             }
+        }
+
+        public void SetMaxHealth(float playerStatsMaxHealth)
+        {
+            _maxHealth = playerStatsMaxHealth;
         }
     }
 }

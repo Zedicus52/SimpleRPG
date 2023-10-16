@@ -44,7 +44,8 @@ namespace SimpleRPG.Player
         protected override void Start()
         {
             base.Start();
-            _playerStats = new PlayerStats(_experienceToNewLevel, _skillsPointsForNewLevel, _playerStatsPattern);
+            _playerStats ??= new PlayerStats(_experienceToNewLevel,
+                _skillsPointsForNewLevel, _playerStatsPattern);
         }
 
         protected override void OnEnable()
@@ -71,14 +72,24 @@ namespace SimpleRPG.Player
             if (LevelContext.Instance.StatsUI.IsOpened)
             {
                 Time.timeScale = 0f;
-                LevelContext.Instance.StatsUI.Initialize(_playerStats);
+                LevelContext.Instance.StatsUI.Initialize(ref _playerStats);
             }
             else
             {
+                UpdateStats();
                 Time.timeScale = 1f;
             }
         }
 
+        private void UpdateStats()
+        {
+            Debug.Log($"Update stats {_playerStats.MaxHealth}");
+            _combatTarget.CharacterHealth.SetMaxHealth(_playerStats.MaxHealth);
+            _navMeshAgent.speed = _playerStats.MaxMovementSpeed;
+            _fighter.SetStrengthMultiplier(_playerStats.StrengthMultiplier);
+            _fighter.SetAttackFrequency(_playerStats.AgilityMultiplier);
+        }
+        
         private void OnCharacterDie(int experience)
         { 
             _playerStats.AddExperience(experience);
@@ -133,12 +144,24 @@ namespace SimpleRPG.Player
         {
             var pos = gameData.Player.Position;
             var rotation = gameData.Player.Rotation;
-            _combatTarget.CreateHealth(gameData.Player.Health);
             _transform.position = new Vector3(pos.X, pos.Y, pos.Z);
             _transform.rotation = Quaternion.Euler(rotation.X, rotation.Y, rotation.Z);
+            
+            var stats = gameData.Player.Stats;
+            _playerStats = new PlayerStats(stats.MaxHealth, stats.StrengthMultiplier, stats.MovementSpeed,
+                stats.AgilityMultiplier, _playerStatsPattern, _experienceToNewLevel, _skillsPointsForNewLevel);
+            _combatTarget.CreateHealth(_playerStats.MaxHealth, gameData.Player.CurrentHealth);
+            
+            _playerStats.SetExperience(gameData.Player.CurrentExperience);
+            _playerStats.SetCurrentLevel(gameData.Player.CurrentLevel);
+            _playerStats.SetAvailableSkillPoints(gameData.Player.AvailableSkillPoints);
+            
             var weapon = GameContext.Instance.GetWeaponById(gameData.Player.WeaponId);
             if (weapon)
                 SetWeapon(weapon);
+            
+            UpdateStats();
+
         }
 
         public void SaveData(ref GameData gameData)
@@ -148,10 +171,20 @@ namespace SimpleRPG.Player
                 LevelContext.Instance.SpawnPoint.position : _lastCheckpoint.SpawnPoint.position;
 
             gameData.Player.LastSceneId = SceneManager.GetActiveScene().buildIndex;
-            gameData.Player.Health = _combatTarget.CharacterHealth.CurrentHealth;
+            gameData.Player.CurrentHealth = _combatTarget.CharacterHealth.CurrentHealth;
             gameData.Player.Position = new SerializableVector3(position.x, position.y, position.z);
             gameData.Player.Rotation = new SerializableVector3(rotation.x, rotation.y, rotation.z);
             gameData.Player.WeaponId = _currentWeapon.Id;
+            gameData.Player.CurrentExperience = _playerStats.CurrentExperience;
+            gameData.Player.CurrentLevel = _playerStats.CurrentLevel;
+            gameData.Player.AvailableSkillPoints = _playerStats.AvailableSkillPoints;
+
+            Debug.Log($"Save data: {_playerStats.MaxHealth}");
+            
+            gameData.Player.Stats.MaxHealth = _playerStats.MaxHealth;
+            gameData.Player.Stats.AgilityMultiplier = _playerStats.AgilityMultiplier;
+            gameData.Player.Stats.StrengthMultiplier = _playerStats.StrengthMultiplier;
+            gameData.Player.Stats.MovementSpeed = _playerStats.MaxMovementSpeed;
         }
 
         public void SetLastCheckpoint(Checkpoint checkpoint) => _lastCheckpoint = checkpoint;
@@ -163,7 +196,8 @@ namespace SimpleRPG.Player
                 Destroy(_lastWeapon.gameObject);
             _lastWeapon = _currentWeapon.SpawnWeapon(_rightHandTransform, _leftHandTransform, _animator);
             _fighter ??= new Fighter(_navMeshAgent,
-                _animator, _attackFrequency, _currentWeapon, _combatTarget, _rightHandTransform, _leftHandTransform);
+                _animator, _attackFrequency, _currentWeapon, _combatTarget, 
+                _rightHandTransform, _leftHandTransform, _playerStats.StrengthMultiplier);
             _fighter.SetWeapon(weapon);
         }
     }

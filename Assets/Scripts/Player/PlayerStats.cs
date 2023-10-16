@@ -1,4 +1,5 @@
 using SimpleRPG.ScriptableObjects;
+using UnityEngine;
 
 namespace SimpleRPG.Player
 {
@@ -8,14 +9,13 @@ namespace SimpleRPG.Player
         public float StrengthMultiplier { get; private set; }
         public float MaxMovementSpeed { get; private set; }
         public float AgilityMultiplier { get; private set; }
+        public int AvailableSkillPoints { get; private set; }
+        public int CurrentExperience { get; private set; }
+        public int CurrentLevel { get; private set; }
 
         private readonly PlayerStatsPattern _playerStatsPattern;
         private readonly int _experienceToNewLevel;
         private readonly int _skillsPointsForNewLevel;
-
-        private int _availableSkillsPoints;
-        private int _currentExperience;
-        private int _currentLevel;
 
 
         public PlayerStats(float maxHealth, float strengthMultiplier,
@@ -36,15 +36,19 @@ namespace SimpleRPG.Player
             _playerStatsPattern = pattern;
         }
 
+        public void SetCurrentLevel(int level) => CurrentLevel = level;
+        public void SetExperience(int experience) => CurrentExperience = experience;
+        public void SetAvailableSkillPoints(int skillPoints) => AvailableSkillPoints = skillPoints;
+
         public void AddExperience(int experience)
         {
-            _currentExperience += experience;
+            CurrentExperience += experience;
             
-            if (_currentExperience >= _currentLevel * _experienceToNewLevel)
+            if (CurrentExperience >= CurrentLevel * _experienceToNewLevel)
             {
-                _availableSkillsPoints += _skillsPointsForNewLevel;
-                _currentExperience -= _currentLevel * _experienceToNewLevel;
-                ++_currentLevel;
+                AvailableSkillPoints += _skillsPointsForNewLevel;
+                CurrentExperience -= CurrentLevel * _experienceToNewLevel;
+                ++CurrentLevel;
             }
         }
 
@@ -53,7 +57,8 @@ namespace SimpleRPG.Player
             if (!HasSkillPoints()) return MaxHealth;
             
             MaxHealth += _playerStatsPattern.HealthStep;
-            --_availableSkillsPoints;
+            --AvailableSkillPoints;
+            Debug.Log($"Increase max health {MaxHealth}");
             return MaxHealth;
         }
 
@@ -62,7 +67,7 @@ namespace SimpleRPG.Player
             if (!HasSkillPoints()) return StrengthMultiplier;
             
             StrengthMultiplier += _playerStatsPattern.StrengthStep;
-            --_availableSkillsPoints;
+            --AvailableSkillPoints;
             return StrengthMultiplier;
         }
 
@@ -71,7 +76,7 @@ namespace SimpleRPG.Player
             if (!HasSkillPoints()) return MaxMovementSpeed;
             
             MaxMovementSpeed += _playerStatsPattern.MovementSpeedStep;
-            --_availableSkillsPoints;
+            --AvailableSkillPoints;
             return MaxMovementSpeed;
         }
 
@@ -80,11 +85,11 @@ namespace SimpleRPG.Player
             if(!HasSkillPoints()) return AgilityMultiplier;
             
             AgilityMultiplier += _playerStatsPattern.AgilityStep;
-            --_availableSkillsPoints;
+            --AvailableSkillPoints;
             return AgilityMultiplier;
         }
 
-        private bool HasSkillPoints() => _availableSkillsPoints > 0;
+        private bool HasSkillPoints() => AvailableSkillPoints > 0;
 
 
 

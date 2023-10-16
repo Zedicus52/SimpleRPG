@@ -56,8 +56,9 @@ namespace SimpleRPG.UI
         }
 
         
-        public void Initialize(PlayerStats stats)
+        public void Initialize(ref PlayerStats stats)
         {
+            Debug.Log($"Initialize {stats.MaxHealth}");
             _healthStat.Initialize(stats.IncreaseHealth, stats.MaxHealth);
             _strengthStat.Initialize(stats.IncreaseStrength, stats.StrengthMultiplier);
             _agilityStat.Initialize(stats.IncreaseAgility, stats.AgilityMultiplier);
