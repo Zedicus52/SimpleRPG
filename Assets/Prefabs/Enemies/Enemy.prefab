@@ -2538,6 +2538,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxHealth: 20
+  _dropExperience: 50
 --- !u!136 &57165988317547681
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -8,7 +8,6 @@ namespace SimpleRPG.Combat
     public class Fighter : IAction
     {
         private readonly NavMeshAgent _navMeshAgent;
-        private readonly float _attackFrequency;
         private readonly Animator _animator;
         private readonly CombatTarget _target;
         private readonly Transform _leftHand;
@@ -20,10 +19,14 @@ namespace SimpleRPG.Combat
 
         private CombatTarget _currentTarget;
         private float _lastAttackTime;
-        
-        public Fighter(NavMeshAgent agent, Animator animator, 
-            float attackFrequency, WeaponSO weaponSo,  CombatTarget target, 
-            Transform rightHand, Transform leftHand)
+        private float _strengthMultiplier;
+        private float _attackFrequencyMultiplier;
+        private float _attackFrequency;
+
+
+        public Fighter(NavMeshAgent agent, Animator animator,
+            float attackFrequency, WeaponSO weaponSo, CombatTarget target,
+            Transform rightHand, Transform leftHand, float strengthMultiplier = 1f, float attackFrequencyMultiplier = 1f)
         {
             _rightHand = rightHand;
             _leftHand = leftHand;
@@ -32,6 +35,8 @@ namespace SimpleRPG.Combat
             _target = target;
             _animator = animator;
             _currentWeapon = weaponSo;
+            _strengthMultiplier = strengthMultiplier;
+            _attackFrequencyMultiplier = attackFrequencyMultiplier;
         }
         public void Attack()
         {
@@ -46,7 +51,7 @@ namespace SimpleRPG.Combat
                     if (_currentWeapon.HasProjectile())
                         _currentWeapon.LaunchProjectile(_leftHand, _rightHand, _currentTarget);
                     else
-                        _currentTarget.TakeDamage(_currentWeapon.Damage);
+                        _currentTarget.TakeDamage(_currentWeapon.Damage + _currentWeapon.Damage * _strengthMultiplier);
                 }
             }
             
@@ -102,6 +107,17 @@ namespace SimpleRPG.Combat
         {
             _navMeshAgent.isStopped = false;
             _navMeshAgent.SetDestination(_currentTarget.transform.position);
+        }
+
+        public void SetStrengthMultiplier(float playerStatsStrengthMultiplier)
+        {
+            _strengthMultiplier = playerStatsStrengthMultiplier;
+        }
+
+        public void SetAttackFrequency(float playerStatsAgilityMultiplier)
+        {
+            _attackFrequencyMultiplier = playerStatsAgilityMultiplier;
+            _attackFrequency -= _attackFrequency * _attackFrequencyMultiplier;
         }
     }
 }   
