@@ -23,9 +23,9 @@ namespace SimpleRPG.Player
         
         private Camera _mainCamera;
 
-        private Player_IA _playerInputActions;
         private InputAction _mouseClickAction;
         private InputAction _mousePositionAction;
+        private InputAction _skillsOpenedAction;
 
         private Checkpoint _lastCheckpoint;
         private WeaponHolder _lastWeapon;
@@ -43,7 +43,6 @@ namespace SimpleRPG.Player
             _navMeshAgent = GetComponent<NavMeshAgent>();
             GameContext.Instance.Saver.RegisterObject(this);
             _mainCamera = Camera.main;
-            _playerInputActions = new Player_IA();
         }
 
         protected override void OnEnable()
@@ -51,15 +50,31 @@ namespace SimpleRPG.Player
             base.OnEnable();
 
             Health.CharacterDie += OnCharacterDie;
-            
-            _mouseClickAction = _playerInputActions.Player.MouseClick;
-            _mousePositionAction = _playerInputActions.Player.MousePosition;
+
+            Player_IA input = LevelContext.Instance.PlayerInput;
+            _mouseClickAction = input.Player.MouseClick;
+            _mousePositionAction = input.Player.MousePosition;
+            _skillsOpenedAction = input.PlayerUI.OpenSkillsTree;
 
             _mousePositionAction.Enable();
             _mouseClickAction.Enable();
-            
+            _skillsOpenedAction.Enable();
 
+            _skillsOpenedAction.performed += OnSkillsOpened;
             _mouseClickAction.performed += OnMouseClick;
+        }
+
+        private void OnSkillsOpened(InputAction.CallbackContext obj)
+        {
+            if (LevelContext.Instance.StatsUI.IsOpened)
+            {
+                Time.timeScale = 0f;
+                LevelContext.Instance.StatsUI.Initialize(_playerStats, _availableSkillPoints);
+            }
+            else
+            {
+                Time.timeScale = 1f;
+            }
         }
 
         private void OnCharacterDie(int experience)
@@ -83,6 +98,11 @@ namespace SimpleRPG.Player
             
             _mouseClickAction.Disable();
             _mousePositionAction.Disable();
+            _skillsOpenedAction.Disable();
+            
+            _mouseClickAction.performed -= OnMouseClick;
+            _skillsOpenedAction.performed -= OnSkillsOpened;
+
         }
 
         private void OnDestroy()

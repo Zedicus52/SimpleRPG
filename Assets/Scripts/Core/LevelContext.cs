@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SimpleRPG.Cinematic;
 using SimpleRPG.ScriptableObjects;
+using SimpleRPG.UI;
 using UnityEngine;
 
 namespace SimpleRPG.Core
@@ -12,20 +13,32 @@ namespace SimpleRPG.Core
         public static LevelContext Instance { get; private set; }
 
         public Transform SpawnPoint => _spawnPoint;
+        public StatsPanel StatsUI => _statsPanel;
+
+        public Player_IA PlayerInput => _playerInput;
         
+        [Header("Level objects")]
         [SerializeField] private List<Checkpoint> _levelCheckpoints;
         [SerializeField] private List<CinematicTriggerZone> _levelCinematic;
 
+        [Header("Data Objects")]
         [SerializeField] private List<CinematicSO> _cinematicSos;
         [SerializeField] private List<CheckpointSO> _checkpointsSos;
+
+        [Header("UI")] 
+        [SerializeField] private StatsPanel _statsPanel;
         
+        [Header("Other")]
         [SerializeField] private Transform _spawnPoint;
+
+        private Player_IA _playerInput;
 
         private void Awake()
         {
             if (Instance == null)
             {
                 Instance = this;
+                _playerInput = new Player_IA();
                 return;
             }
             Destroy(gameObject);
@@ -52,7 +65,6 @@ namespace SimpleRPG.Core
                 }
             }
         }
-
         private void InitializeCinematic()
         {
             if(_cinematicSos.Count != _levelCinematic.Count)

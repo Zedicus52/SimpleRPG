@@ -9,6 +9,7 @@ namespace SimpleRPG.Combat
         public static event Action<int> CharacterDie;
         public bool IsDead => _currentHealth <= 0;
         public float CurrentHealth => _currentHealth;
+        public float MaxHealth => _maxHealth;
         
         private readonly float _maxHealth;
         private readonly Animator _animator;
