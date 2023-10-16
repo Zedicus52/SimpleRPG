@@ -31,11 +31,7 @@ namespace SimpleRPG.Player
         private WeaponHolder _lastWeapon;
         private NavMeshAgent _navMeshAgent;
         private PlayerStats _playerStats;
-
-        private int _currentExperience;
-        private int _currentLevel = 1;
-        private int _availableSkillPoints;
-
+        
 
         protected override void Awake()
         {
@@ -43,6 +39,12 @@ namespace SimpleRPG.Player
             _navMeshAgent = GetComponent<NavMeshAgent>();
             GameContext.Instance.Saver.RegisterObject(this);
             _mainCamera = Camera.main;
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+            _playerStats = new PlayerStats(_experienceToNewLevel, _skillsPointsForNewLevel, _playerStatsPattern);
         }
 
         protected override void OnEnable()
@@ -69,7 +71,7 @@ namespace SimpleRPG.Player
             if (LevelContext.Instance.StatsUI.IsOpened)
             {
                 Time.timeScale = 0f;
-                LevelContext.Instance.StatsUI.Initialize(_playerStats, _availableSkillPoints);
+                LevelContext.Instance.StatsUI.Initialize(_playerStats);
             }
             else
             {
@@ -78,15 +80,8 @@ namespace SimpleRPG.Player
         }
 
         private void OnCharacterDie(int experience)
-        {
-            _currentExperience += experience;
-
-            if (_currentExperience >= _currentLevel * _experienceToNewLevel)
-            {
-                _availableSkillPoints += _skillsPointsForNewLevel;
-                _currentExperience -= _currentLevel * _experienceToNewLevel;
-                ++_currentLevel;
-            }
+        { 
+            _playerStats.AddExperience(experience);
         }
 
 
@@ -141,9 +136,6 @@ namespace SimpleRPG.Player
             _combatTarget.CreateHealth(gameData.Player.Health);
             _transform.position = new Vector3(pos.X, pos.Y, pos.Z);
             _transform.rotation = Quaternion.Euler(rotation.X, rotation.Y, rotation.Z);
-            _currentExperience = gameData.Player.CurrentExperience;
-            _availableSkillPoints = gameData.Player.AvailableSkillPoints;
-            _currentLevel = gameData.Player.CurrentLevel;
             var weapon = GameContext.Instance.GetWeaponById(gameData.Player.WeaponId);
             if (weapon)
                 SetWeapon(weapon);
@@ -160,9 +152,6 @@ namespace SimpleRPG.Player
             gameData.Player.Position = new SerializableVector3(position.x, position.y, position.z);
             gameData.Player.Rotation = new SerializableVector3(rotation.x, rotation.y, rotation.z);
             gameData.Player.WeaponId = _currentWeapon.Id;
-            gameData.Player.CurrentExperience = _currentExperience;
-            gameData.Player.CurrentLevel = _currentLevel;
-            gameData.Player.AvailableSkillPoints = _availableSkillPoints;
         }
 
         public void SetLastCheckpoint(Checkpoint checkpoint) => _lastCheckpoint = checkpoint;

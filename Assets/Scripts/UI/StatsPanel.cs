@@ -1,9 +1,9 @@
 using System;
+using System.Collections.Generic;
 using SimpleRPG.Core;
 using SimpleRPG.Player;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 namespace SimpleRPG.UI
 {
@@ -13,14 +13,18 @@ namespace SimpleRPG.UI
         
         [SerializeField] private Transform _mainPanel;
 
-        private InputAction _skillsInputAction;
+        [SerializeField] private StatUi _healthStat;
+        [SerializeField] private StatUi _strengthStat;
+        [SerializeField] private StatUi _agilityStat;
+        [SerializeField] private StatUi _speedStat;
+        
 
+        private InputAction _skillsInputAction;
         private bool _isOpened;
         
 
         private void OnEnable()
         {
-
             _skillsInputAction = LevelContext.Instance.PlayerInput.PlayerUI.OpenSkillsTree;
             _skillsInputAction.Enable();
             _skillsInputAction.performed += OnSkillsInputAction;
@@ -51,10 +55,14 @@ namespace SimpleRPG.UI
             _isOpened = true;
         }
 
-        public void Initialize(PlayerStats stats, int skillsCount)
+        
+        public void Initialize(PlayerStats stats)
         {
-            Debug.Log(stats);
-            Debug.Log($"Skills count: {skillsCount}");
+            _healthStat.Initialize(stats.IncreaseHealth, stats.MaxHealth);
+            _strengthStat.Initialize(stats.IncreaseStrength, stats.StrengthMultiplier);
+            _agilityStat.Initialize(stats.IncreaseAgility, stats.AgilityMultiplier);
+            _speedStat.Initialize(stats.IncreaseMovementSpeed, stats.MaxMovementSpeed);
         }
+        
     }
 }
