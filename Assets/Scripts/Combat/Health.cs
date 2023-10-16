@@ -7,6 +7,8 @@ namespace SimpleRPG.Combat
     {
 
         public static event Action<int> CharacterDie;
+        public event Action<float> HealthChanged;
+        public event Action<float> MaxHealthChanged;
         public bool IsDead => _currentHealth <= 0;
         public float CurrentHealth => _currentHealth;
         public float MaxHealth => _maxHealth;
@@ -40,20 +42,22 @@ namespace SimpleRPG.Combat
                 _animator.SetTrigger(_die);
                 CharacterDie?.Invoke(_dropExperience);
             }
+            
+            HealthChanged?.Invoke(_currentHealth);
         }
 
         public void SetMaxHealth(float playerStatsMaxHealth)
         {
             _maxHealth = playerStatsMaxHealth;
+            MaxHealthChanged?.Invoke(_maxHealth);
         }
 
         public void RestoreHealth(float restoreHealth)
         {
-            Debug.Log($"Before restore: {_currentHealth}");
             if (_currentHealth < _maxHealth)
                 _currentHealth += restoreHealth;
-
-            Debug.Log($"After restore: {_currentHealth}");
+            
+            HealthChanged?.Invoke(_currentHealth);
         }
     }
 }
