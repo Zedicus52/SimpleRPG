@@ -1,4 +1,3 @@
-using System;
 using SimpleRPG.Combat;
 using SimpleRPG.Core;
 using SimpleRPG.DataPersistence;
@@ -83,7 +82,6 @@ namespace SimpleRPG.Player
 
         private void UpdateStats()
         {
-            Debug.Log($"Update stats {_playerStats.MaxHealth}");
             _combatTarget.CharacterHealth.SetMaxHealth(_playerStats.MaxHealth);
             _navMeshAgent.speed = _playerStats.MaxMovementSpeed;
             _fighter.SetStrengthMultiplier(_playerStats.StrengthMultiplier);
@@ -179,8 +177,6 @@ namespace SimpleRPG.Player
             gameData.Player.CurrentLevel = _playerStats.CurrentLevel;
             gameData.Player.AvailableSkillPoints = _playerStats.AvailableSkillPoints;
 
-            Debug.Log($"Save data: {_playerStats.MaxHealth}");
-            
             gameData.Player.Stats.MaxHealth = _playerStats.MaxHealth;
             gameData.Player.Stats.AgilityMultiplier = _playerStats.AgilityMultiplier;
             gameData.Player.Stats.StrengthMultiplier = _playerStats.StrengthMultiplier;

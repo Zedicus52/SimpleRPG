@@ -58,7 +58,6 @@ namespace SimpleRPG.Player
             
             MaxHealth += _playerStatsPattern.HealthStep;
             --AvailableSkillPoints;
-            Debug.Log($"Increase max health {MaxHealth}");
             return MaxHealth;
         }
 

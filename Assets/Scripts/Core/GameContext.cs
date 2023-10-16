@@ -39,8 +39,8 @@ namespace SimpleRPG.Core
         }
 
         private void OnApplicationQuit()
-        {
-            Saver.SaveGame();
+        { 
+            //Saver.SaveGame();
         }
 
 

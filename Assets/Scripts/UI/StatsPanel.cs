@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using SimpleRPG.Core;
 using SimpleRPG.Player;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,10 +18,13 @@ namespace SimpleRPG.UI
         [SerializeField] private StatUi _strengthStat;
         [SerializeField] private StatUi _agilityStat;
         [SerializeField] private StatUi _speedStat;
+
+        [SerializeField] private TMP_Text _availableSkillPoints;
         
 
         private InputAction _skillsInputAction;
         private bool _isOpened;
+        private PlayerStats _stats;
         
 
         private void OnEnable()
@@ -58,11 +62,17 @@ namespace SimpleRPG.UI
         
         public void Initialize(ref PlayerStats stats)
         {
-            Debug.Log($"Initialize {stats.MaxHealth}");
-            _healthStat.Initialize(stats.IncreaseHealth, stats.MaxHealth);
-            _strengthStat.Initialize(stats.IncreaseStrength, stats.StrengthMultiplier);
-            _agilityStat.Initialize(stats.IncreaseAgility, stats.AgilityMultiplier);
-            _speedStat.Initialize(stats.IncreaseMovementSpeed, stats.MaxMovementSpeed);
+            _stats = stats;
+            UpdateSkillPointsText();
+            _healthStat.Initialize(stats.IncreaseHealth, UpdateSkillPointsText, stats.MaxHealth);
+            _strengthStat.Initialize(stats.IncreaseStrength,UpdateSkillPointsText, stats.StrengthMultiplier);
+            _agilityStat.Initialize(stats.IncreaseAgility,UpdateSkillPointsText, stats.AgilityMultiplier);
+            _speedStat.Initialize(stats.IncreaseMovementSpeed,UpdateSkillPointsText, stats.MaxMovementSpeed);
+        }
+
+        private void UpdateSkillPointsText()
+        {
+            _availableSkillPoints.text = _stats.AvailableSkillPoints.ToString();
         }
         
     }

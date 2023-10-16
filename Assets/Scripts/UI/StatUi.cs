@@ -11,13 +11,14 @@ namespace SimpleRPG.UI
         [SerializeField] private TMP_Text _valueText;
 
         
-        public void Initialize(Func<float> action, float value)
+        public void Initialize(Func<float> mainAction, Action updateText, float value)
         {
             _valueText.text = $"{value:f2}";
             _addButton.onClick.AddListener(() =>
             {
-                float newValue = action();
+                float newValue = mainAction();
                 _valueText.text = $"{newValue:f2}";
+                updateText();
             });
         }
 
