@@ -55,7 +55,10 @@ namespace SimpleRPG.Combat
         public void RestoreHealth(float restoreHealth)
         {
             if (_currentHealth < _maxHealth)
+            {
+                restoreHealth = _maxHealth - _currentHealth;
                 _currentHealth += restoreHealth;
+            }
             
             HealthChanged?.Invoke(_currentHealth);
         }
