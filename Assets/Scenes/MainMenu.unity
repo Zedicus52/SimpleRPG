@@ -433,7 +433,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 411552029}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1002476655}
+        m_TargetAssemblyTypeName: SimpleRPG.Core.LocalSceneManager, Assembly-CSharp
+        m_MethodName: StartNewGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &411552029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -659,7 +671,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 705381592}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1429227610}
+        m_TargetAssemblyTypeName: SimpleRPG.Core.GameContext, Assembly-CSharp
+        m_MethodName: ExitGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &705381592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -993,6 +1017,17 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1429227610 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7396919901398165932, guid: 6fb52fed7031b9e4a94e7ce42985743f, type: 3}
+  m_PrefabInstance: {fileID: 2753909059915702740}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07504fa5376447d5bf5d880ca2924091, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1548040370
 GameObject:
   m_ObjectHideFlags: 0
@@ -1459,7 +1494,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1990804305}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1002476655}
+        m_TargetAssemblyTypeName: SimpleRPG.Core.LocalSceneManager, Assembly-CSharp
+        m_MethodName: LoadLastScene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1990804305
 MonoBehaviour:
   m_ObjectHideFlags: 0

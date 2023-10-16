@@ -19,6 +19,7 @@ namespace SimpleRPG.DataPersistence.Data
             CurrentLevel = 1;
             CurrentExperience = 0;
             AvailableSkillPoints = 0;
+            WeaponId = "5ad94a79-cc9f-4d8d-b6df-aa8914297b7b";
         }
 
     }
