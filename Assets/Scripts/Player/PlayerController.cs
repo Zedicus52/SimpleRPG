@@ -196,5 +196,10 @@ namespace SimpleRPG.Player
                 _rightHandTransform, _leftHandTransform, _playerStats.StrengthMultiplier);
             _fighter.SetWeapon(weapon);
         }
+
+        public void RestoreHealth(float restoreHealth)
+        {
+            _combatTarget.CharacterHealth.RestoreHealth(restoreHealth);
+        }
     }
 }

@@ -46,5 +46,14 @@ namespace SimpleRPG.Combat
         {
             _maxHealth = playerStatsMaxHealth;
         }
+
+        public void RestoreHealth(float restoreHealth)
+        {
+            Debug.Log($"Before restore: {_currentHealth}");
+            if (_currentHealth < _maxHealth)
+                _currentHealth += restoreHealth;
+
+            Debug.Log($"After restore: {_currentHealth}");
+        }
     }
 }
