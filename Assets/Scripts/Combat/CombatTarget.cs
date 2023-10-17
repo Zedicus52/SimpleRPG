@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace SimpleRPG.Combat
 {
@@ -13,6 +15,10 @@ namespace SimpleRPG.Combat
 
         [Header("Experience settings")] 
         [SerializeField] private int _dropExperience;
+
+        [Header("Sound effects")] 
+        [SerializeField] private UnityEvent _takingDamage;
+        [SerializeField] private UnityEvent _die;
         
         private Health _health;
         private Animator _animator;
@@ -23,7 +29,26 @@ namespace SimpleRPG.Combat
             CreateHealth(_maxHealth, _maxHealth);
         }
 
-        public void TakeDamage(float damage) => _health.TakeDamage(damage);
+        private void OnEnable()
+        {
+            Health.CharacterDie += OnCharacterDie;
+        }
+
+        private void OnDisable()
+        {
+            Health.CharacterDie -= OnCharacterDie;
+        }
+
+        private void OnCharacterDie(int obj)
+        {
+            _die?.Invoke();
+        }
+
+        public void TakeDamage(float damage)
+        {
+            _health.TakeDamage(damage);
+            _takingDamage?.Invoke();
+        }
 
         public void CreateHealth(float maxHealth, float currentHealth) => 
             _health = new Health(maxHealth,currentHealth, _animator, _dropExperience);

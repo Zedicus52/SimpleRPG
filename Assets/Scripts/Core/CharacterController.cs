@@ -21,6 +21,7 @@ namespace SimpleRPG.Core
         [SerializeField] protected float _attackFrequency;
         [SerializeField] private float _maxPathLength;
         
+        
         protected Animator _animator;
         protected Transform _transform;
         protected CombatTarget _combatTarget;

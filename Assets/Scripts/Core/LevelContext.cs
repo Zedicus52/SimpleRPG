@@ -95,5 +95,10 @@ namespace SimpleRPG.Core
                 cinematic.SetIsPlayed(false);
             }
         }
+
+        public Checkpoint GetCheckpointById(string id)
+        {
+            return _levelCheckpoints.FirstOrDefault(x => x.Id.Equals(id));
+        }
     }
 }
