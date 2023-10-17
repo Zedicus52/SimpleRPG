@@ -45,7 +45,7 @@ namespace SimpleRPG.Cinematic
             CinematicEnded?.Invoke();
         }
 
-        public void SetIsPlayed() => _isPlayed = true;
+        public void SetIsPlayed(bool isPlayed = true) => _isPlayed = isPlayed;
 
 
     }

@@ -9,20 +9,34 @@ namespace SimpleRPG.Core
 {
     public class LocalSceneManager : MonoBehaviour, IDataPersistence
     {
-        public  void LoadScene()
+        private int _sceneToLoad = 1;
+
+        public void LoadLastScene()
         {
             StartCoroutine(Load());
+        }
+
+        public void StartNewGame()
+        {
+            StartCoroutine(StartGame());
         }
 
         private IEnumerator Load()
         {
             DontDestroyOnLoad(this);
             yield return SceneManager.LoadSceneAsync(_sceneToLoad);
-            GameContext.Instance.Load();
+            GameContext.Instance.LoadLastSave();
             Destroy(gameObject);
         }
 
-        private int _sceneToLoad;
+        private IEnumerator StartGame()
+        {
+            DontDestroyOnLoad(this);
+            yield return SceneManager.LoadSceneAsync(_sceneToLoad);
+            GameContext.Instance.StartNewGame();
+            Destroy(gameObject);
+        }
+
 
         private void OnEnable()
         {

@@ -21,6 +21,7 @@ namespace SimpleRPG.Core
         
         [Header("Weapons")] 
         [SerializeField] private List<WeaponSO> _allWeapons;
+
         private void Awake()
         {
             if (Instance == null)
@@ -40,7 +41,7 @@ namespace SimpleRPG.Core
 
         private void OnApplicationQuit()
         { 
-            //Saver.SaveGame();
+            Saver.SaveGame();
         }
 
 
@@ -66,7 +67,7 @@ namespace SimpleRPG.Core
             return null;
         }
 
-        public void Load()
+        public void LoadLastSave()
         {
             GameData data = Saver.GetCurrentSave();
             if (data.Player.Position != null && data.Player.Rotation != null)
@@ -79,6 +80,21 @@ namespace SimpleRPG.Core
                 SpawnPlayer(newPos, Quaternion.Euler(rotation.X, rotation.Y, rotation.Z));
             }
             
+        }
+
+        public void StartNewGame()
+        {
+            Saver.StartNewGame();
+            var newPos = LevelContext.Instance.SpawnPoint.position;
+            LevelContext.Instance.ResetCheckPoints();
+            LevelContext.Instance.ResetCinematics();
+            SpawnPlayer(newPos, Quaternion.identity);
+
+        }
+
+        public void ExitGame()
+        {
+            Application.Quit();
         }
 
         public WeaponSO GetWeaponById(string id) => 

@@ -46,23 +46,24 @@ namespace SimpleRPG.Core
 
         private void Start()
         {
+            
             InitializeCheckpoints();
             InitializeCinematic();
+
         }
 
         private void InitializeCheckpoints()
         {
+            
             if(_checkpointsSos.Count != _levelCheckpoints.Count)
                 return;
-
+            
             foreach (var data in _checkpointsSos)
             {
-                if (data.IsReached)
-                {
+
                     var checkpoint = _levelCheckpoints.FirstOrDefault(x => x.Id.Equals(data.Id));
                     if (checkpoint != null)
-                        checkpoint.SetIsReached();
-                }
+                        checkpoint.SetIsReached(data.IsReached);
             }
         }
         private void InitializeCinematic()
@@ -75,7 +76,23 @@ namespace SimpleRPG.Core
                 var cinematic = 
                     _levelCinematic.FirstOrDefault(x => x.Id.Equals(data.Id));
                 if(cinematic != null)
-                    cinematic.SetIsPlayed();
+                    cinematic.SetIsPlayed(data.IsPlayed);
+            }
+        }
+
+        public void ResetCheckPoints()
+        {
+            foreach (var levelCheckpoint in _checkpointsSos)
+            {
+               levelCheckpoint.SetIsReached(false);
+            }
+        }
+
+        public void ResetCinematics()
+        {
+            foreach (var cinematic in _cinematicSos)
+            {
+                cinematic.SetIsPlayed(false);
             }
         }
     }

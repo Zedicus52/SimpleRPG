@@ -140,19 +140,38 @@ namespace SimpleRPG.Player
 
         public void LoadData(GameData gameData)
         {
+            if (gameData.Player.Rotation != null)
+            {
+                var rotation = gameData.Player.Rotation;
+                _transform.rotation = Quaternion.Euler(rotation.X, rotation.Y, rotation.Z);
+            }
+            
             var pos = gameData.Player.Position;
-            var rotation = gameData.Player.Rotation;
-            _transform.position = new Vector3(pos.X, pos.Y, pos.Z);
-            _transform.rotation = Quaternion.Euler(rotation.X, rotation.Y, rotation.Z);
+            if (pos != null)
+            {
+                _transform.position = new Vector3(pos.X, pos.Y, pos.Z);
+
+            }
             
-            var stats = gameData.Player.Stats;
-            _playerStats = new PlayerStats(stats.MaxHealth, stats.StrengthMultiplier, stats.MovementSpeed,
-                stats.AgilityMultiplier, _playerStatsPattern, _experienceToNewLevel, _skillsPointsForNewLevel);
-            _combatTarget.CreateHealth(_playerStats.MaxHealth, gameData.Player.CurrentHealth);
+            if (gameData.Player.CurrentLevel != 0)
+            {
+                var stats = gameData.Player.Stats;
+                _playerStats = new PlayerStats(stats.MaxHealth, stats.StrengthMultiplier, stats.MovementSpeed,
+                    stats.AgilityMultiplier, _playerStatsPattern, _experienceToNewLevel, _skillsPointsForNewLevel);
+                _combatTarget.CreateHealth(_playerStats.MaxHealth, gameData.Player.CurrentHealth);
             
-            _playerStats.SetExperience(gameData.Player.CurrentExperience);
-            _playerStats.SetCurrentLevel(gameData.Player.CurrentLevel);
-            _playerStats.SetAvailableSkillPoints(gameData.Player.AvailableSkillPoints);
+                _playerStats.SetExperience(gameData.Player.CurrentExperience);
+                _playerStats.SetCurrentLevel(gameData.Player.CurrentLevel);
+                _playerStats.SetAvailableSkillPoints(gameData.Player.AvailableSkillPoints);
+            }
+            else
+            {
+                _playerStats = new PlayerStats(_combatTarget.CharacterHealth.MaxHealth,
+                    0.001f, _navMeshAgent.speed, 0.001f, _playerStatsPattern, _experienceToNewLevel,
+                    _skillsPointsForNewLevel);
+                _playerStats.SetCurrentLevel(1);
+            }
+            
             
             var weapon = GameContext.Instance.GetWeaponById(gameData.Player.WeaponId);
             if (weapon)

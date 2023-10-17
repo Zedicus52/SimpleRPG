@@ -20,6 +20,6 @@ namespace SimpleRPG.ScriptableObjects
                 _id = Guid.NewGuid().ToString();
         }
 
-        public void SetIsReached() => _isReached = true;
+        public void SetIsReached(bool isReached = true) => _isReached = isReached;
     }
 }

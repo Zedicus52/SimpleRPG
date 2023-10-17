@@ -20,6 +20,6 @@ namespace SimpleRPG.ScriptableObjects
                 _id = Guid.NewGuid().ToString();
         }
 
-        public void SetIsPlayed() => _isPlayed = true;
+        public void SetIsPlayed(bool isPlayed = true) => _isPlayed = isPlayed;
     }
 }
