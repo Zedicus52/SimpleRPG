@@ -27,7 +27,7 @@ namespace SimpleRPG.Core
             if (Instance == null)
             {
                 Instance = this;
-                Saver = new LocalSaver("file", false);
+                Saver = new LocalSaver("file1", false);
                 DontDestroyOnLoad(this);
                 return;
             }
@@ -49,7 +49,19 @@ namespace SimpleRPG.Core
         {
             LevelTransition neededPortal = GetNeededPortal(currentPortal);
             if (neededPortal)
-                SpawnPlayer(neededPortal.SpawnPoint.position, Quaternion.identity);
+            {
+                GameData data = Saver.GetCurrentSave();
+                if (data.Player.Position != null && data.Player.Rotation != null)
+                {
+                    var pos = data.Player.Position;
+                    var rotation = data.Player.Rotation;
+                    var newPos = new Vector3(pos.X, pos.Y, pos.Z);
+                    if (newPos == Vector3.zero)
+                        newPos = LevelContext.Instance.SpawnPoint.position;
+                    SpawnPlayer(newPos, Quaternion.Euler(rotation.X, rotation.Y, rotation.Z));
+                }
+
+            }
         }
 
         private LevelTransition GetNeededPortal(LevelTransition currentPortal)
