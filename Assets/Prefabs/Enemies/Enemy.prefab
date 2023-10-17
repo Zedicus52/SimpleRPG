@@ -2623,6 +2623,7 @@ MonoBehaviour:
   _leftHandTransform: {fileID: 4943582179295901020}
   _currentWeapon: {fileID: 11400000, guid: f33537e80618c3343a8cba890131886e, type: 2}
   _attackFrequency: 2
+  _maxPathLength: 40
   _chaseDistance: 5
   _returnToStartPosition: 1
   _patrolTime: 5

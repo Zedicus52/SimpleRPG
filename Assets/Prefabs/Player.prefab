@@ -1616,6 +1616,7 @@ MonoBehaviour:
   _leftHandTransform: {fileID: 1831329861869024165}
   _currentWeapon: {fileID: 11400000, guid: f33537e80618c3343a8cba890131886e, type: 2}
   _attackFrequency: 2
+  _maxPathLength: 40
   _skillsPointsForNewLevel: 3
   _experienceToNewLevel: 100
   _playerStatsPattern: {fileID: 11400000, guid: f55fa88960bf79949a6edbf5b77d2934, type: 2}
