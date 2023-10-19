@@ -150,9 +150,15 @@ namespace SimpleRPG.Player
             if (pos != null)
             {
                 _transform.position = new Vector3(pos.X, pos.Y, pos.Z);
-
             }
-            
+
+            if (!string.IsNullOrEmpty(gameData.Player.LastCheckpointId))
+            {
+                var check = LevelContext.Instance.GetCheckpointById(gameData.Player.LastCheckpointId);
+                if (check)
+                    _lastCheckpoint = check;
+            }
+
             if (gameData.Player.CurrentLevel != 0)
             {
                 var stats = gameData.Player.Stats;
@@ -192,6 +198,8 @@ namespace SimpleRPG.Player
             gameData.Player.Position = new SerializableVector3(position.x, position.y, position.z);
             gameData.Player.Rotation = new SerializableVector3(rotation.x, rotation.y, rotation.z);
             gameData.Player.WeaponId = _currentWeapon.Id;
+            if(_lastCheckpoint != null)
+                gameData.Player.LastCheckpointId = _lastCheckpoint.Id;
             gameData.Player.CurrentExperience = _playerStats.CurrentExperience;
             gameData.Player.CurrentLevel = _playerStats.CurrentLevel;
             gameData.Player.AvailableSkillPoints = _playerStats.AvailableSkillPoints;

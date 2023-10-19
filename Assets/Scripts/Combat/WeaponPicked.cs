@@ -3,6 +3,7 @@ using SimpleRPG.Core;
 using SimpleRPG.Player;
 using SimpleRPG.ScriptableObjects;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace SimpleRPG.Combat
 {
@@ -10,6 +11,10 @@ namespace SimpleRPG.Combat
     public class WeaponPicked : MonoBehaviour
     {
         [SerializeField] private WeaponSO _weapon;
+
+        [Header("Sound")] 
+        [SerializeField] private UnityEvent _pickUpEvent;
+        
         private Recoverable _recoverable;
         private void Awake()
         {
@@ -22,6 +27,7 @@ namespace SimpleRPG.Combat
             if (other.TryGetComponent(out PlayerController player))
             {
                 player.SetWeapon(_weapon);
+                _pickUpEvent?.Invoke();
                 _recoverable.StartRestore(GetComponent<MeshRenderer>());
             }
         }

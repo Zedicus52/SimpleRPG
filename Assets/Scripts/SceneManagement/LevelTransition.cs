@@ -33,7 +33,9 @@ namespace SimpleRPG.SceneManagement
 
         private IEnumerator LoadScene()
         {
+            GameContext.Instance.Saver.SaveGame();
             DontDestroyOnLoad(gameObject);
+            Destroy(LevelContext.Instance);
             yield return SceneManager.LoadSceneAsync(_indexSceneToLoad);
             GameContext.Instance.InitializeLoadedScene(this);
             Destroy(gameObject);
