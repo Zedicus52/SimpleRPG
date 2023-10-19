@@ -1,75 +1,57 @@
-using System;
+using SimpleRPG.Abstraction;
+using SimpleRPG.Combat;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.InputSystem;
+
 
 namespace SimpleRPG.Player
 {
-    [RequireComponent(typeof(NavMeshAgent), typeof(Animator))]
-    public class Mover : MonoBehaviour
+    public class Mover : IAction
     {
-        private NavMeshAgent _navMeshAgent;
-        private Camera _mainCamera;
-        private Animator _animator;
-        private Transform _transform;
-
-        private Player_IA _playerInputActions;
-        private InputAction _mouseClickAction;
-        private InputAction _mousePositionAction;
-        private readonly int _playerSpeed = Animator.StringToHash("PlayerSpeed");
-
-        private void Awake()
+        public Vector3 Velocity => _navMeshAgent.velocity;
+        
+        private readonly NavMeshAgent _navMeshAgent;
+        private readonly float _maxPathLength;
+        private readonly Health _health;
+        public Mover(NavMeshAgent agent, Health health, float maxPathLength)
         {
-            _navMeshAgent = GetComponent<NavMeshAgent>();
-            _animator = GetComponent<Animator>();
-            _transform = GetComponent<Transform>();
-
-            _mainCamera = Camera.main;
-            _playerInputActions = new Player_IA();
+            _maxPathLength = maxPathLength;
+            _health = health;
+            _navMeshAgent = agent;
         }
 
-        private void OnEnable()
+        public void StartAction(Vector3 destinationPoint)
         {
-            _mouseClickAction = _playerInputActions.Player.MouseClick;
-            _mousePositionAction = _playerInputActions.Player.MousePosition;
+            if(_health.IsDead)
+                return;
 
-            _mousePositionAction.Enable();
-            _mouseClickAction.Enable();
-
-            _mouseClickAction.performed += OnMouseClick;
-        }
-
-        private void Update()
-        {
-            if(_mouseClickAction.IsPressed())
-                OnMouseClick();
+            NavMeshPath path = new NavMeshPath();
+            bool hasPath = NavMesh.CalculatePath(_navMeshAgent.transform.position, 
+                destinationPoint, NavMesh.AllAreas, path);
+            if(hasPath == false) return;
+            if(path.status != NavMeshPathStatus.PathComplete) return;
+            if(GetPathLength(path) > _maxPathLength) return;
             
-            UpdateAnimator();
+            _navMeshAgent.isStopped = false;
+            _navMeshAgent.SetDestination(destinationPoint);
+
         }
 
-        private void OnDisable()
+        private float GetPathLength(NavMeshPath path)
         {
-            _mouseClickAction.Disable();
-            _mousePositionAction.Disable();
-        }
-
-        private void OnMouseClick(InputAction.CallbackContext context) => OnMouseClick();
-
-        private void OnMouseClick()
-        {
-            Vector2 mousePos = _mousePositionAction.ReadValue<Vector2>();
-            Ray ray = _mainCamera.ScreenPointToRay(mousePos);
-
-            if (Physics.Raycast(ray, out RaycastHit hitInfo))
+            float total = 0;
+            if (path.corners.Length < 2) return total;
+            for (int i = 0; i < path.corners.Length-1; i++)
             {
-                _navMeshAgent.SetDestination(hitInfo.point);
+                total += Vector3.Distance(path.corners[i], path.corners[i + 1]);
             }
+
+            return total;
         }
 
-        private void UpdateAnimator()
+        public void Cancel()
         {
-            Vector3 localVelocity = _transform.InverseTransformDirection(_navMeshAgent.velocity);
-            _animator.SetFloat(_playerSpeed, localVelocity.z);
+            _navMeshAgent.isStopped = true;
         }
     }
 }

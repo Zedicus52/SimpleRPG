@@ -59,6 +59,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "PlayerUI",
+            "id": "6935970c-dd36-45cf-9725-c9d9e5fe2b18",
+            "actions": [
+                {
+                    "name": "OpenSkillsTree",
+                    "type": "Button",
+                    "id": "47d37e7f-fad7-4401-94a2-e78586ae59d2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "ad9a3656-9572-4682-8ed7-61f673b63432",
+                    "path": "<Keyboard>/l",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "OpenSkillsTree",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
